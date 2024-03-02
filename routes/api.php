@@ -14,6 +14,9 @@ Route::group(['prefix' => 'v1'], function () {
     Route::post('reset-pin', [TerminalController::class, 'reset_pin']);
     Route::post('verify-pin', [TerminalController::class, 'verify_pin']);
     Route::any('get-all-logged-data', [PosTrasnactionController::class, 'get_all_by_serial_logged_data']);
+    Route::any('get-all-transactions', [PosTrasnactionController::class, 'get_all_transaction']);
+
+
     Route::any('get-all-logged-data/get-all-transactions', [PosTrasnactionController::class, 'get_all_transaction_by_filter']);
     Route::any('complete-transaction', [PosTrasnactionController::class, 'EtopPos']);
 

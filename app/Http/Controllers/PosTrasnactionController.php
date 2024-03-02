@@ -20,6 +20,34 @@ use Illuminate\Support\Facades\Hash;
 class PosTrasnactionController extends Controller
 {
 
+    public function get_all_transaction(request $request)
+    {
+        $SerialNo = $request->header('serialnumber');
+        $data = Transaction::latest()->where('SerialNo', $SerialNo)->get() ?? null;
+        //$transactionType = $request->transactionType;
+        $mer = Terminal::where('serialNumber', $SerialNo)->first() ?? null;
+        if ($data->isEmpty()) {
+
+            return response()->json([
+                'success' => false,
+                'transaction' => [],
+                'allTransaction' => null,
+                'message' => null,
+                'mid' => $mer->mid,
+                'merchantDetails' => [
+                    'merchantName' => $mer->merchantName,
+                    'serialnumber' => $SerialNo,
+                    'mid' => $mer->mid,
+                    'tid' => $mer->tid,
+                    'merchantaddress' => $mer->merchantaddress
+                ],
+                'error' => null,
+            ], 200);
+
+        }
+    }
+
+
     public function EtopPosLogs(request $request)
     {
 
@@ -321,7 +349,6 @@ class PosTrasnactionController extends Controller
 
 
         $transactionType = $request->transactionType;
-
         $mer = Terminal::where('serialNumber', $SerialNo)->first()  ?? null;
         if ($rrn != null && $amount != null && $startofday != null && $endofday != null) {
 
