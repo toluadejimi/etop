@@ -23,11 +23,10 @@ class PosTrasnactionController extends Controller
     public function get_all_transaction(request $request)
     {
         $SerialNo = $request->header('serialnumber');
-        $data = Transaction::latest()->where('SerialNo', $SerialNo)->get() ?? null;
+        $data = PosLog::latest()->where('SerialNo', $SerialNo)->get() ?? null;
         //$transactionType = $request->transactionType;
         $mer = Terminal::where('serialNumber', $SerialNo)->first() ?? null;
         if ($data->isEmpty()) {
-
             return response()->json([
                 'success' => false,
                 'transaction' => [],
@@ -52,7 +51,6 @@ class PosTrasnactionController extends Controller
     {
 
         $SerialNo = $request->header('serialnumber');
-
         $account_balance = user_balance($SerialNo);
         $RRN = $request->RRN;
         $STAN = $request->STAN;
@@ -140,21 +138,8 @@ class PosTrasnactionController extends Controller
 
 
         return response()->json([
-            'newTransaction' => [
-                'success' => true,
-                'transaction' => $trasnaction,
-            ],
-            'merchantName' => $mer->merchantName,
-            'mid' => $mer->mid,
-            'allTransaction' => null,
-            'message' => "Transaction initiated successfully",
-            'merchantDetails' => [
-                'merchantName' => $mer->merchantName,
-                'serialnumber' => $mer->serialNumber,
-                'mid' => $mer->mid,
-                'tid' => $mer->tid,
-                'merchantaddress' => $mer->merchantaddress
-            ],
+                'status' => true,
+                'message' => "Transaction initiated successfully",
         ], 200);
     }
 
@@ -352,7 +337,7 @@ class PosTrasnactionController extends Controller
         $mer = Terminal::where('serialNumber', $SerialNo)->first()  ?? null;
         if ($rrn != null && $amount != null && $startofday != null && $endofday != null) {
 
-            $data = Transaction::whereBetween('createdAt', [$startofday . ' 00:00:00', $endofday . ' 23:59:59'])
+            $data = PosLog::whereBetween('createdAt', [$startofday . ' 00:00:00', $endofday . ' 23:59:59'])
             ->where([
                 'RRN' => $rrn,
                 'amount' => $amount,
