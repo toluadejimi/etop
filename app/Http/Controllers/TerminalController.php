@@ -65,7 +65,7 @@ class TerminalController extends Controller
             $pin = Hash::make($newpin);
             User::where('serial_no', $SerialNo)->update(['pin' => $pin]);
             return response()->json([
-                'success' => "success",
+                'success' => true,
                 'error' => null,
             ], 200);
             return error_response($message);
