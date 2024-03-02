@@ -29,7 +29,7 @@ if (!function_exists('error_response')) {
             'terminal' => null,
             'terminals' => null,
             'error' => $message,
-        ], 401);
+        ], 200);
     }
 }
 
