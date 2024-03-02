@@ -22,45 +22,245 @@ class PosTrasnactionController extends Controller
 
     public function get_all_transaction(request $request)
     {
-        $SerialNo = $request->header('serialnumber');
-        $data = PosLog::latest()->where('SerialNo', $SerialNo)->take('20')->get() ?? null;
-        //$transactionType = $request->transactionType;
-        $mer = Terminal::where('serialNumber', $SerialNo)->first() ?? null;
-        if ($data->isEmpty()) {
-            return response()->json([
-                'success' => false,
-                'transaction' => [],
-                'allTransaction' => null,
-                'message' => null,
-                'mid' => $mer->mid,
-                'merchantDetails' => [
-                    'merchantName' => $mer->merchantName,
-                    'serialnumber' => $SerialNo,
+
+
+        if($request->startofday == null && $request->endofday == null){
+
+            $SerialNo = $request->header('serialnumber');
+            $data = PosLog::latest()->where('SerialNo', $SerialNo)->take('20')->get() ?? null;
+            $totalSuccessAmount =  PosLog::where('SerialNo', $SerialNo)->where('respCode', "00")->sum('amount');
+            $totalFailedAmount  =  PosLog::where('SerialNo', $SerialNo)->where('respCode', "2934")->sum('amount');
+            $totalTransactionAmount = PosLog::where('SerialNo', $SerialNo)->sum('amount');
+
+            $mer = Terminal::where('serialNumber', $SerialNo)->first() ?? null;
+            if ($data->isEmpty()) {
+                return response()->json([
+                    'success' => false,
+                    'transaction' => [],
+                    'allTransaction' => null,
+                    'totalSuccessAmount' => null,
+                    'totalFailedAmount' => null,
+                    'totalTransactionAmount' =>  null,
+                    'message' => null,
                     'mid' => $mer->mid,
-                    'tid' => $mer->tid,
-                    'merchantaddress' => $mer->merchantaddress
-                ],
-                'error' => null,
-            ], 200);
+                    'merchantDetails' => [
+                        'merchantName' => $mer->merchantName,
+                        'serialnumber' => $SerialNo,
+                        'mid' => $mer->mid,
+                        'tid' => $mer->tid,
+                        'merchantaddress' => $mer->merchantaddress
+                    ],
+                    'error' => null,
+                ], 200);
+
+            }
+            else{
+
+                return response()->json([
+                    'success' => true,
+                    'transaction' => [],
+                    'allTransaction' =>  $data,
+                    'totalSuccessAmount' => $totalSuccessAmount,
+                    'totalFailedAmount' => $totalFailedAmount,
+                    'totalTransactionAmount' =>  $totalTransactionAmount,
+                    'message' => null,
+                    'mid' => $mer->mid,
+                    'merchantDetails' => [
+                        'merchantName' => $mer->merchantName,
+                        'serialnumber' => $SerialNo,
+                        'mid' => $mer->mid,
+                        'tid' => $mer->tid,
+                        'merchantaddress' => $mer->merchantaddress
+                    ],
+                    'error' => null,
+                ], 200);
+            }
+
 
         }
 
 
+        if($request->startofday != null && $request->endofday == null){
+            $SerialNo = $request->header('serialnumber');
+            $data = PosLog::latest()->where('SerialNo', $SerialNo)->whereDate('created_at', $request->startofday)->get() ?? null;
+            $totalSuccessAmount =  PosLog::where('SerialNo', $SerialNo)->whereDate('created_at', $request->startofday)->sum('amount');
+            $totalFailedAmount  =  PosLog::where('SerialNo', $SerialNo)->whereDate('created_at', $request->startofday)->sum('amount');
+            $totalTransactionAmount = PosLog::where('SerialNo', $SerialNo)->whereDate('created_at', $request->startofday)->sum('amount');
+
+            $mer = Terminal::where('serialNumber', $SerialNo)->first() ?? null;
+            if ($data->isEmpty()) {
+                return response()->json([
+                    'success' => false,
+                    'transaction' => [],
+                    'allTransaction' => null,
+                    'totalSuccessAmount' => null,
+                    'totalFailedAmount' => null,
+                    'totalTransactionAmount' =>  null,
+                    'message' => null,
+                    'mid' => $mer->mid,
+                    'merchantDetails' => [
+                        'merchantName' => $mer->merchantName,
+                        'serialnumber' => $SerialNo,
+                        'mid' => $mer->mid,
+                        'tid' => $mer->tid,
+                        'merchantaddress' => $mer->merchantaddress
+                    ],
+                    'error' => null,
+                ], 200);
+
+            }
+            else{
+
+                return response()->json([
+                    'success' => true,
+                    'transaction' => [],
+                    'allTransaction' =>  $data,
+                    'totalSuccessAmount' => $totalSuccessAmount,
+                    'totalFailedAmount' => $totalFailedAmount,
+                    'totalTransactionAmount' =>  $totalTransactionAmount,
+                    'message' => null,
+                    'mid' => $mer->mid,
+                    'merchantDetails' => [
+                        'merchantName' => $mer->merchantName,
+                        'serialnumber' => $SerialNo,
+                        'mid' => $mer->mid,
+                        'tid' => $mer->tid,
+                        'merchantaddress' => $mer->merchantaddress
+                    ],
+                    'error' => null,
+                ], 200);
+            }
+
+        }
+
+
+        if($request->startofday == null && $request->endofday != null){
+            $SerialNo = $request->header('serialnumber');
+            $data = PosLog::latest()->where('SerialNo', $SerialNo)->whereDate('created_at', $request->endofday)->get() ?? null;
+            $totalSuccessAmount =  PosLog::where('SerialNo', $SerialNo)->whereDate('created_at', $request->endofday)->sum('amount');
+            $totalFailedAmount  =  PosLog::where('SerialNo', $SerialNo)->whereDate('created_at', $request->endofday)->sum('amount');
+            $totalTransactionAmount = PosLog::where('SerialNo', $SerialNo)->whereDate('created_at', $request->endofday)->sum('amount');
+
+            $mer = Terminal::where('serialNumber', $SerialNo)->first() ?? null;
+            if ($data->isEmpty()) {
+                return response()->json([
+                    'success' => false,
+                    'transaction' => [],
+                    'allTransaction' => null,
+                    'totalSuccessAmount' => null,
+                    'totalFailedAmount' => null,
+                    'totalTransactionAmount' =>  null,
+                    'message' => null,
+                    'mid' => $mer->mid,
+                    'merchantDetails' => [
+                        'merchantName' => $mer->merchantName,
+                        'serialnumber' => $SerialNo,
+                        'mid' => $mer->mid,
+                        'tid' => $mer->tid,
+                        'merchantaddress' => $mer->merchantaddress
+                    ],
+                    'error' => null,
+                ], 200);
+
+            }
+            else{
+
+                return response()->json([
+                    'success' => true,
+                    'transaction' => [],
+                    'allTransaction' =>  $data,
+                    'totalSuccessAmount' => $totalSuccessAmount,
+                    'totalFailedAmount' => $totalFailedAmount,
+                    'totalTransactionAmount' =>  $totalTransactionAmount,
+                    'message' => null,
+                    'mid' => $mer->mid,
+                    'merchantDetails' => [
+                        'merchantName' => $mer->merchantName,
+                        'serialnumber' => $SerialNo,
+                        'mid' => $mer->mid,
+                        'tid' => $mer->tid,
+                        'merchantaddress' => $mer->merchantaddress
+                    ],
+                    'error' => null,
+                ], 200);
+            }
+
+        }
+
+
+        if($request->startofday != null && $request->endofday != null){
+            $SerialNo = $request->header('serialnumber');
+            $data = PosLog::latest()->where('SerialNo', $SerialNo)->whereBetween('created_at',[$request->startofday, $request->endofday])->get() ?? null;
+            $totalSuccessAmount =  PosLog::where('SerialNo', $SerialNo)->whereBetween('created_at',[$request->startofday, $request->endofday])->sum('amount');
+            $totalFailedAmount  =  PosLog::where('SerialNo', $SerialNo)->whereBetween('created_at',[$request->startofday, $request->endofday])->sum('amount');
+            $totalTransactionAmount = PosLog::where('SerialNo', $SerialNo)->whereBetween('created_at',[$request->startofday, $request->endofday])->sum('amount');
+            $mer = Terminal::where('serialNumber', $SerialNo)->first() ?? null;
+            if ($data->isEmpty()) {
+                return response()->json([
+                    'success' => false,
+                    'transaction' => [],
+                    'allTransaction' => null,
+                    'totalSuccessAmount' => null,
+                    'totalFailedAmount' => null,
+                    'totalTransactionAmount' =>  null,
+                    'message' => null,
+                    'mid' => $mer->mid,
+                    'merchantDetails' => [
+                        'merchantName' => $mer->merchantName,
+                        'serialnumber' => $SerialNo,
+                        'mid' => $mer->mid,
+                        'tid' => $mer->tid,
+                        'merchantaddress' => $mer->merchantaddress
+                    ],
+                    'error' => null,
+                ], 200);
+
+            }
+            else{
+
+                return response()->json([
+                    'success' => true,
+                    'transaction' => [],
+                    'allTransaction' =>  $data,
+                    'totalSuccessAmount' => $totalSuccessAmount,
+                    'totalFailedAmount' => $totalFailedAmount,
+                    'totalTransactionAmount' =>  $totalTransactionAmount,
+                    'message' => null,
+                    'mid' => $mer->mid,
+                    'merchantDetails' => [
+                        'merchantName' => $mer->merchantName,
+                        'serialnumber' => $SerialNo,
+                        'mid' => $mer->mid,
+                        'tid' => $mer->tid,
+                        'merchantaddress' => $mer->merchantaddress
+                    ],
+                    'error' => null,
+                ], 200);
+            }
+
+
+        }
+
         return response()->json([
-            'success' => true,
+            'success' => false,
             'transaction' => [],
-            'allTransaction' =>  $data,
-            'message' => null,
-            'mid' => $mer->mid,
+            'allTransaction' => null,
+            'totalSuccessAmount' => null,
+            'totalFailedAmount' => null,
+            'totalTransactionAmount' =>  null,
+            'message' => "Sommthing Went Wrong",
+            'mid' => null,
             'merchantDetails' => [
-                'merchantName' => $mer->merchantName,
-                'serialnumber' => $SerialNo,
-                'mid' => $mer->mid,
-                'tid' => $mer->tid,
-                'merchantaddress' => $mer->merchantaddress
+                'merchantName' => null,
+                'serialnumber' => null,
+                'mid' => null,
+                'tid' => null,
+                'merchantaddress' => null
             ],
-            'error' => null,
+            'error' => true,
         ], 200);
+
+
     }
 
 

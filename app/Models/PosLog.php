@@ -16,9 +16,6 @@ class PosLog extends Model
         'amount' => 'string',
         'log_status' => 'string',
         'status' => 'boolean',
-
-
-
     ];
 
 
