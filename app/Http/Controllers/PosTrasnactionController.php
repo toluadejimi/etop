@@ -23,7 +23,7 @@ class PosTrasnactionController extends Controller
     public function get_all_transaction(request $request)
     {
         $SerialNo = $request->header('serialnumber');
-        $data = PosLog::latest()->where('SerialNo', $SerialNo)->get() ?? null;
+        $data = PosLog::latest()->where('SerialNo', $SerialNo)->take('20')->get() ?? null;
         //$transactionType = $request->transactionType;
         $mer = Terminal::where('serialNumber', $SerialNo)->first() ?? null;
         if ($data->isEmpty()) {
@@ -44,6 +44,23 @@ class PosTrasnactionController extends Controller
             ], 200);
 
         }
+
+
+        return response()->json([
+            'success' => false,
+            'transaction' => [],
+            'allTransaction' =>  $data,
+            'message' => null,
+            'mid' => $mer->mid,
+            'merchantDetails' => [
+                'merchantName' => $mer->merchantName,
+                'serialnumber' => $SerialNo,
+                'mid' => $mer->mid,
+                'tid' => $mer->tid,
+                'merchantaddress' => $mer->merchantaddress
+            ],
+            'error' => null,
+        ], 200);
     }
 
 
