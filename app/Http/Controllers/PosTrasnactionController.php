@@ -47,7 +47,7 @@ class PosTrasnactionController extends Controller
 
 
         return response()->json([
-            'success' => false,
+            'success' => true,
             'transaction' => [],
             'allTransaction' =>  $data,
             'message' => null,
