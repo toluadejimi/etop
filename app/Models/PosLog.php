@@ -15,6 +15,8 @@ class PosLog extends Model
         'accountBalance' => 'string',
         'amount' => 'string',
         'log_status' => 'string',
+        'status' => 'boolean',
+
 
 
     ];
