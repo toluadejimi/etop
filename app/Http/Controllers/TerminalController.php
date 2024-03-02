@@ -98,7 +98,7 @@ class TerminalController extends Controller
         $get_pin = User::where('serial_no', $SerialNo)->first()->pin ?? null;
         if (Hash::check($oldpin, $get_pin)) {
             return response()->json([
-                'success' => "success",
+                'success' => true,
                 'error' => null,
             ], 200);
 
