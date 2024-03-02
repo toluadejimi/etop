@@ -30,7 +30,8 @@ class PosTrasnactionController extends Controller
             $data = PosLog::latest()->where('SerialNo', $SerialNo)->take('20')->get() ?? null;
             $totalSuccessAmount =  PosLog::where('SerialNo', $SerialNo)->where('respCode', "00")->sum('amount');
             $totalFailedAmount  =  PosLog::where('SerialNo', $SerialNo)->where('respCode', "2934")->sum('amount');
-            $totalTransactionAmount = PosLog::where('SerialNo', $SerialNo)->sum('amount');
+           $totalTransactionAmount = $totalSuccessAmount + $totalFailedAmount;
+
 
             $mer = Terminal::where('serialNumber', $SerialNo)->first() ?? null;
             if ($data->isEmpty()) {
@@ -41,7 +42,7 @@ class PosTrasnactionController extends Controller
                     'totalSuccessAmount' => null,
                     'totalFailedAmount' => null,
                     'totalTransactionAmount' =>  null,
-                    'message' => null,
+                    'message' => "No Record Found",
                     'mid' => $mer->mid,
                     'merchantDetails' => [
                         'merchantName' => $mer->merchantName,
@@ -83,9 +84,9 @@ class PosTrasnactionController extends Controller
         if($request->startofday != null && $request->endofday == null){
             $SerialNo = $request->header('serialnumber');
             $data = PosLog::latest()->where('SerialNo', $SerialNo)->whereDate('created_at', $request->startofday)->get() ?? null;
-            $totalSuccessAmount =  PosLog::where('SerialNo', $SerialNo)->whereDate('created_at', $request->startofday)->sum('amount');
-            $totalFailedAmount  =  PosLog::where('SerialNo', $SerialNo)->whereDate('created_at', $request->startofday)->sum('amount');
-            $totalTransactionAmount = PosLog::where('SerialNo', $SerialNo)->whereDate('created_at', $request->startofday)->sum('amount');
+            $totalSuccessAmount =  PosLog::where(['SerialNo'=> $SerialNo,'respCode' => "00"])->whereDate('created_at', $request->startofday)->sum('amount');
+            $totalFailedAmount  =  PosLog::where(['SerialNo'=> $SerialNo,'respCode' => "007890"])->whereDate('created_at', $request->startofday)->sum('amount');
+            $totalTransactionAmount = $totalSuccessAmount + $totalFailedAmount;
 
             $mer = Terminal::where('serialNumber', $SerialNo)->first() ?? null;
             if ($data->isEmpty()) {
@@ -96,7 +97,7 @@ class PosTrasnactionController extends Controller
                     'totalSuccessAmount' => null,
                     'totalFailedAmount' => null,
                     'totalTransactionAmount' =>  null,
-                    'message' => null,
+                    'message' => "No Record Found",
                     'mid' => $mer->mid,
                     'merchantDetails' => [
                         'merchantName' => $mer->merchantName,
@@ -137,9 +138,9 @@ class PosTrasnactionController extends Controller
         if($request->startofday == null && $request->endofday != null){
             $SerialNo = $request->header('serialnumber');
             $data = PosLog::latest()->where('SerialNo', $SerialNo)->whereDate('created_at', $request->endofday)->get() ?? null;
-            $totalSuccessAmount =  PosLog::where('SerialNo', $SerialNo)->whereDate('created_at', $request->endofday)->sum('amount');
-            $totalFailedAmount  =  PosLog::where('SerialNo', $SerialNo)->whereDate('created_at', $request->endofday)->sum('amount');
-            $totalTransactionAmount = PosLog::where('SerialNo', $SerialNo)->whereDate('created_at', $request->endofday)->sum('amount');
+            $totalSuccessAmount =  PosLog::where(['SerialNo'=> $SerialNo,'respCode' => "00"])->whereDate('created_at', $request->endofday)->sum('amount');
+            $totalFailedAmount  =  PosLog::where(['SerialNo'=> $SerialNo,'respCode' => "007890"])->whereDate('created_at', $request->endofday)->sum('amount');
+            $totalTransactionAmount = $totalSuccessAmount + $totalFailedAmount;
 
             $mer = Terminal::where('serialNumber', $SerialNo)->first() ?? null;
             if ($data->isEmpty()) {
@@ -150,7 +151,7 @@ class PosTrasnactionController extends Controller
                     'totalSuccessAmount' => null,
                     'totalFailedAmount' => null,
                     'totalTransactionAmount' =>  null,
-                    'message' => null,
+                    'message' => "No Record Found",
                     'mid' => $mer->mid,
                     'merchantDetails' => [
                         'merchantName' => $mer->merchantName,
@@ -191,9 +192,9 @@ class PosTrasnactionController extends Controller
         if($request->startofday != null && $request->endofday != null){
             $SerialNo = $request->header('serialnumber');
             $data = PosLog::latest()->where('SerialNo', $SerialNo)->whereBetween('created_at',[$request->startofday, $request->endofday])->get() ?? null;
-            $totalSuccessAmount =  PosLog::where('SerialNo', $SerialNo)->whereBetween('created_at',[$request->startofday, $request->endofday])->sum('amount');
-            $totalFailedAmount  =  PosLog::where('SerialNo', $SerialNo)->whereBetween('created_at',[$request->startofday, $request->endofday])->sum('amount');
-            $totalTransactionAmount = PosLog::where('SerialNo', $SerialNo)->whereBetween('created_at',[$request->startofday, $request->endofday])->sum('amount');
+            $totalSuccessAmount =  PosLog::where(['SerialNo'=> $SerialNo,'respCode' => "00"])->whereBetween('created_at',[$request->startofday, $request->endofday])->sum('amount');
+            $totalFailedAmount  =  PosLog::where(['SerialNo'=> $SerialNo,'respCode' => "007890"])->whereBetween('created_at',[$request->startofday, $request->endofday])->sum('amount');
+            $totalTransactionAmount = $totalSuccessAmount + $totalFailedAmount;
             $mer = Terminal::where('serialNumber', $SerialNo)->first() ?? null;
             if ($data->isEmpty()) {
                 return response()->json([
@@ -203,7 +204,7 @@ class PosTrasnactionController extends Controller
                     'totalSuccessAmount' => null,
                     'totalFailedAmount' => null,
                     'totalTransactionAmount' =>  null,
-                    'message' => null,
+                    'message' => "No Record Found",
                     'mid' => $mer->mid,
                     'merchantDetails' => [
                         'merchantName' => $mer->merchantName,
