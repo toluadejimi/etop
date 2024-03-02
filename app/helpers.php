@@ -42,7 +42,7 @@ if (!function_exists('error_pin_response')) {
         return response()->json([
             'success' => false,
             'error' => $message,
-        ], 422);
+        ], 200);
     }
 }
 
