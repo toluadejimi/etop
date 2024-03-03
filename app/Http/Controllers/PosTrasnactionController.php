@@ -23,6 +23,63 @@ class PosTrasnactionController extends Controller
     public function get_all_transaction(request $request)
     {
 
+        if($request->rrn != null){
+
+            $SerialNo = $request->header('serialnumber');
+            $data = PosLog::where('RRN', $request->rrn)->get() ?? null;
+            $totalSuccessAmount =  PosLog::where('RRN', $request->rrn)->where('respCode', "00")->sum('amount');
+            $totalFailedAmount  =  PosLog::where('RRN', $request->rrn)->where('respCode', "2934")->sum('amount');
+            $totalTransactionAmount = $totalSuccessAmount + $totalFailedAmount;
+
+
+            $mer = Terminal::where('serialNumber', $SerialNo)->first() ?? null;
+            if ($data->isEmpty()) {
+                return response()->json([
+                    'success' => false,
+                    'transaction' => [],
+                    'allTransaction' => null,
+                    'totalSuccessAmount' => null,
+                    'totalFailedAmount' => null,
+                    'totalTransactionAmount' =>  null,
+                    'message' => "No Record Found",
+                    'mid' => $mer->mid,
+                    'merchantDetails' => [
+                        'merchantName' => $mer->merchantName,
+                        'serialnumber' => $SerialNo,
+                        'mid' => $mer->mid,
+                        'tid' => $mer->tid,
+                        'merchantaddress' => $mer->merchantaddress
+                    ],
+                    'error' => null,
+                ], 200);
+
+            }
+            else{
+
+                return response()->json([
+                    'success' => true,
+                    'transaction' => [],
+                    'allTransaction' =>  $data,
+                    'totalSuccessAmount' => $totalSuccessAmount,
+                    'totalFailedAmount' => $totalFailedAmount,
+                    'totalTransactionAmount' =>  $totalTransactionAmount,
+                    'message' => null,
+                    'mid' => $mer->mid,
+                    'merchantDetails' => [
+                        'merchantName' => $mer->merchantName,
+                        'serialnumber' => $SerialNo,
+                        'mid' => $mer->mid,
+                        'tid' => $mer->tid,
+                        'merchantaddress' => $mer->merchantaddress
+                    ],
+                    'error' => null,
+                ], 200);
+            }
+
+
+
+
+        }
 
         if($request->startofday == null && $request->endofday == null){
 
