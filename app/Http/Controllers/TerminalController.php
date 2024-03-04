@@ -16,6 +16,7 @@ class TerminalController extends Controller
         $SerialNo = $request->header('serialnumber');
         $ter = Terminal::where('serialNumber', $request->serialNumber)->first() ?? null;
         if ($ter == null) {
+
             $term = new Terminal();
             $term->tid = $request->tid;
             $term->ip = $request->ip;
@@ -29,6 +30,8 @@ class TerminalController extends Controller
             $term->merchantName = $request->merchantName;
             $term->mid = $request->mid;
             $term->merchantaddress = $request->merchantaddress;
+            $term->pin = Hash::make($request->pin);
+
             $term->save();
 
             return response()->json([
@@ -138,13 +141,13 @@ function reset_pin(request $request)
         return error_response($message);
     }
 
-    $check_user = User::where('serial_no', $SerialNo)->first();
+    $check_user = Terminal::where('serial_no', $SerialNo)->first();
     if ($check_user == null) {
         $message = "Terminal not found";
         return error_response($message);
     }
 
-    $get_pin = User::where('serial_no', $SerialNo)->first()->pin ?? null;
+    $get_pin = Terminal::where('serial_no', $SerialNo)->first()->pin ?? null;
     $pin_ck = $request->newPin;
 
 
@@ -156,7 +159,7 @@ function reset_pin(request $request)
         }
 
         $pin = Hash::make($newpin);
-        User::where('serial_no', $SerialNo)->update(['pin' => $pin]);
+        Terminal::where('serial_no', $SerialNo)->update(['pin' => $pin]);
         return response()->json([
             'success' => true,
             'error' => null,
@@ -182,14 +185,14 @@ function verify_pin(request $request)
         return error_response($message);
     }
 
-    $check_user = User::where('serial_no', $SerialNo)->first();
+    $check_user = Terminal::where('serial_no', $SerialNo)->first();
     if ($check_user == null) {
         $message = "Terminal not found";
         return error_response($message);
     }
 
     $oldpin = $request->pin;
-    $get_pin = User::where('serial_no', $SerialNo)->first()->pin ?? null;
+    $get_pin = Terminal::where('serial_no', $SerialNo)->first()->pin ?? null;
     if (Hash::check($oldpin, $get_pin)) {
         return response()->json([
             'success' => true,
