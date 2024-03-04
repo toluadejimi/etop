@@ -141,13 +141,13 @@ function reset_pin(request $request)
         return error_response($message);
     }
 
-    $check_user = Terminal::where('serial_no', $SerialNo)->first();
+    $check_user = Terminal::where('serialNumber', $SerialNo)->first();
     if ($check_user == null) {
         $message = "Terminal not found";
         return error_response($message);
     }
 
-    $get_pin = Terminal::where('serial_no', $SerialNo)->first()->pin ?? null;
+    $get_pin = Terminal::where('serialNumber', $SerialNo)->first()->pin ?? null;
     $pin_ck = $request->newPin;
 
 
@@ -159,7 +159,7 @@ function reset_pin(request $request)
         }
 
         $pin = Hash::make($newpin);
-        Terminal::where('serial_no', $SerialNo)->update(['pin' => $pin]);
+        Terminal::where('serialNumber', $SerialNo)->update(['pin' => $pin]);
         return response()->json([
             'success' => true,
             'error' => null,
@@ -185,14 +185,14 @@ function verify_pin(request $request)
         return error_response($message);
     }
 
-    $check_user = Terminal::where('serial_no', $SerialNo)->first();
+    $check_user = Terminal::where('serialNumber', $SerialNo)->first();
     if ($check_user == null) {
         $message = "Terminal not found";
         return error_response($message);
     }
 
     $oldpin = $request->pin;
-    $get_pin = Terminal::where('serial_no', $SerialNo)->first()->pin ?? null;
+    $get_pin = Terminal::where('serialNumber', $SerialNo)->first()->pin ?? null;
     if (Hash::check($oldpin, $get_pin)) {
         return response()->json([
             'success' => true,
