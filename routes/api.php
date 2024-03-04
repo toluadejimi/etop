@@ -20,6 +20,14 @@ Route::group(['prefix' => 'v1'], function () {
     Route::any('get-all-logged-data/get-all-transactions', [PosTrasnactionController::class, 'get_all_transaction_by_filter']);
     Route::any('complete-transaction', [PosTrasnactionController::class, 'EtopPos']);
 
+    Route::any('create-terminal', [TerminalController::class, 'create_terminal']);
+
+    Route::any('all-terminals', [TerminalController::class, 'view_all_terminal']);
+
+    Route::any('delete-terminal', [TerminalController::class, 'delete_terminal']);
+
+
+
 
 });
 
