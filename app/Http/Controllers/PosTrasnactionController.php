@@ -138,9 +138,9 @@ class PosTrasnactionController extends Controller
 
         if ($request->startofday != null && $request->endofday == null) {
             $SerialNo = $request->header('serialnumber');
-            $data = PosLog::latest()->where('SerialNo', $SerialNo)->whereDate('created_at', $request->startofday)->get() ?? null;
-            $totalSuccessAmount = PosLog::where(['SerialNo' => $SerialNo, 'respCode' => "00"])->whereDate('created_at', $request->startofday)->sum('amount');
-            $totalFailedAmount = PosLog::where(['SerialNo' => $SerialNo, 'respCode' => "007890"])->whereDate('created_at', $request->startofday)->sum('amount');
+            $data = PosLog::latest()->where('SerialNo', $SerialNo)->whereDate('createdAt', $request->startofday)->get() ?? null;
+            $totalSuccessAmount = PosLog::where(['SerialNo' => $SerialNo, 'respCode' => "00"])->whereDate('createdAt', $request->startofday)->sum('amount');
+            $totalFailedAmount = PosLog::where(['SerialNo' => $SerialNo, 'respCode' => "007890"])->whereDate('createdAt', $request->startofday)->sum('amount');
             $totalTransactionAmount = $totalSuccessAmount + $totalFailedAmount;
 
             $mer = Terminal::where('serialNumber', $SerialNo)->first() ?? null;
@@ -191,9 +191,9 @@ class PosTrasnactionController extends Controller
 
         if ($request->startofday == null && $request->endofday != null) {
             $SerialNo = $request->header('serialnumber');
-            $data = PosLog::latest()->where('SerialNo', $SerialNo)->whereDate('created_at', $request->endofday)->get() ?? null;
-            $totalSuccessAmount = PosLog::where(['SerialNo' => $SerialNo, 'respCode' => "00"])->whereDate('created_at', $request->endofday)->sum('amount');
-            $totalFailedAmount = PosLog::where(['SerialNo' => $SerialNo, 'respCode' => "007890"])->whereDate('created_at', $request->endofday)->sum('amount');
+            $data = PosLog::latest()->where('SerialNo', $SerialNo)->whereDate('createdAt', $request->endofday)->get() ?? null;
+            $totalSuccessAmount = PosLog::where(['SerialNo' => $SerialNo, 'respCode' => "00"])->whereDate('createdAt', $request->endofday)->sum('amount');
+            $totalFailedAmount = PosLog::where(['SerialNo' => $SerialNo, 'respCode' => "007890"])->whereDate('createdAt', $request->endofday)->sum('amount');
             $totalTransactionAmount = $totalSuccessAmount + $totalFailedAmount;
 
             $mer = Terminal::where('serialNumber', $SerialNo)->first() ?? null;
@@ -244,9 +244,9 @@ class PosTrasnactionController extends Controller
 
         if ($request->startofday != null && $request->endofday != null) {
             $SerialNo = $request->header('serialnumber');
-            $data = PosLog::where('SerialNo', $SerialNo)->whereBetween('created_at', [$request->startofday . ' 00:00:00', $request->endofday . ' 23:59:59'])->get() ?? null;
-            $totalSuccessAmount = PosLog::where(['SerialNo' => $SerialNo, 'respCode' => "00"])->whereBetween('created_at', [$request->startofday . ' 00:00:00', $request->endofday . ' 23:59:59'])->sum('amount');
-            $totalFailedAmount = PosLog::where(['SerialNo' => $SerialNo, 'respCode' => "007890"])->whereBetween('created_at', [$request->startofday, $request->endofday])->sum('amount');
+            $data = PosLog::where('SerialNo', $SerialNo)->whereBetween('createdAt', [$request->startofday . ' 00:00:00', $request->endofday . ' 23:59:59'])->get() ?? null;
+            $totalSuccessAmount = PosLog::where(['SerialNo' => $SerialNo, 'respCode' => "00"])->whereBetween('createdAt', [$request->startofday . ' 00:00:00', $request->endofday . ' 23:59:59'])->sum('amount');
+            $totalFailedAmount = PosLog::where(['SerialNo' => $SerialNo, 'respCode' => "007890"])->whereBetween('createdAt', [$request->startofday, $request->endofday])->sum('amount');
             $totalTransactionAmount = $totalSuccessAmount + $totalFailedAmount;
             $mer = Terminal::where('serialNumber', $SerialNo)->first() ?? null;
             if ($data->isEmpty()) {
@@ -415,8 +415,10 @@ class PosTrasnactionController extends Controller
         $trasnaction->transactionType = $transactionType;
         $trasnaction->cardName = $cardName;
         $trasnaction->SerialNo = $SerialNo;
-        $trasnaction->created_at=$created_at;
+        $trasnaction->createdAt= $created_at;
+        $trasnaction->updatedAt= $created_at;
         $trasnaction->save();
+
 
         $mer = Terminal::where('serialNumber', $SerialNo)->first() ?? null;
 
@@ -754,25 +756,25 @@ class PosTrasnactionController extends Controller
 
 
         $today = $request->date;
-        $transaction = Transaction::select('e_ref', 'amount', 'sender_name', 'created_at', 'status')->where('user_id', $request->user_id)->whereDate('created_at', $today)->get();
+        $transaction = Transaction::select('e_ref', 'amount', 'sender_name', 'createdAt', 'status')->where('user_id', $request->user_id)->whereDate('created_at', $today)->get();
         $terminalNo = Terminal::where('user_id', $request->user_id)->first()->serial_no;
         $merchantName = Terminal::where('user_id', $request->user_id)->first()->merchantName;
         $merchantNo = Terminal::where('user_id', $request->user_id)->first()->merchantNo;
-        $totalTransaction = Transaction::where('user_id', $request->user_id)->whereDate('created_at', $today)->count();
-        $totalSuccess = Transaction::whereDate('created_at', $today)
+        $totalTransaction = Transaction::where('user_id', $request->user_id)->whereDate('createdAt', $today)->count();
+        $totalSuccess = Transaction::whereDate('createdAt', $today)
             ->where([
                 'user_id' => $request->user_id,
                 'status' => 1
             ])->count();
 
 
-        $totalFail = Transaction::whereDate('created_at', $today)
+        $totalFail = Transaction::whereDate('createdAt', $today)
             ->where([
                 'user_id' => $request->user_id,
                 'status' => 4
             ])->count();
 
-        $totalPurchaseAmount = Transaction::whereDate('created_at', $today)
+        $totalPurchaseAmount = Transaction::whereDate('createdAt', $today)
             ->where([
                 'user_id' => $request->user_id,
                 'status' => 1

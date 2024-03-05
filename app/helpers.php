@@ -12,8 +12,8 @@ if (!function_exists('GetTermainalDetails')) {
     {
         $details = Terminal::where('serialNumber', $SerialNo)->first() ?? null;
         unset($details->id);
-        unset($details->created_at);
-        unset($details->updated_at);
+        unset($details->createdAt);
+        unset($details->updatedAt);
         return $details;
 
     }
