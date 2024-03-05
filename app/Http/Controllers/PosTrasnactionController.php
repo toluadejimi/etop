@@ -29,6 +29,9 @@ class PosTrasnactionController extends Controller
 
             $SerialNo = $request->header('serialnumber');
             $data = PosLog::where('RRN', $request->rrn)->get() ?? null;
+            unset($data->created_at);
+            unset($data->updated_at);
+
             $totalSuccessAmount = PosLog::where('RRN', $request->rrn)->where('respCode', "00")->sum('amount');
             $totalFailedAmount = PosLog::where('RRN', $request->rrn)->where('respCode', "2934")->sum('amount');
             $totalTransactionAmount = $totalSuccessAmount + $totalFailedAmount;
@@ -84,6 +87,9 @@ class PosTrasnactionController extends Controller
 
             $SerialNo = $request->header('serialnumber');
             $data = PosLog::latest()->where('SerialNo', $SerialNo)->take('20')->get() ?? null;
+            unset($data->created_at);
+            unset($data->updated_at);
+
             $totalSuccessAmount = PosLog::where('SerialNo', $SerialNo)->where('respCode', "00")->sum('amount');
             $totalFailedAmount = PosLog::where('SerialNo', $SerialNo)->where('respCode', "2934")->sum('amount');
             $totalTransactionAmount = $totalSuccessAmount + $totalFailedAmount;
@@ -139,6 +145,9 @@ class PosTrasnactionController extends Controller
         if ($request->startofday != null && $request->endofday == null) {
             $SerialNo = $request->header('serialnumber');
             $data = PosLog::latest()->where('SerialNo', $SerialNo)->whereDate('createdAt', $request->startofday)->get() ?? null;
+            unset($data->created_at);
+            unset($data->updated_at);
+
             $totalSuccessAmount = PosLog::where(['SerialNo' => $SerialNo, 'respCode' => "00"])->whereDate('createdAt', $request->startofday)->sum('amount');
             $totalFailedAmount = PosLog::where(['SerialNo' => $SerialNo, 'respCode' => "007890"])->whereDate('createdAt', $request->startofday)->sum('amount');
             $totalTransactionAmount = $totalSuccessAmount + $totalFailedAmount;
@@ -192,6 +201,9 @@ class PosTrasnactionController extends Controller
         if ($request->startofday == null && $request->endofday != null) {
             $SerialNo = $request->header('serialnumber');
             $data = PosLog::latest()->where('SerialNo', $SerialNo)->whereDate('createdAt', $request->endofday)->get() ?? null;
+            unset($data->created_at);
+            unset($data->updated_at);
+
             $totalSuccessAmount = PosLog::where(['SerialNo' => $SerialNo, 'respCode' => "00"])->whereDate('createdAt', $request->endofday)->sum('amount');
             $totalFailedAmount = PosLog::where(['SerialNo' => $SerialNo, 'respCode' => "007890"])->whereDate('createdAt', $request->endofday)->sum('amount');
             $totalTransactionAmount = $totalSuccessAmount + $totalFailedAmount;
@@ -245,6 +257,9 @@ class PosTrasnactionController extends Controller
         if ($request->startofday != null && $request->endofday != null) {
             $SerialNo = $request->header('serialnumber');
             $data = PosLog::where('SerialNo', $SerialNo)->whereBetween('createdAt', [$request->startofday . ' 00:00:00', $request->endofday . ' 23:59:59'])->get() ?? null;
+            unset($data->created_at);
+            unset($data->updated_at);
+
             $totalSuccessAmount = PosLog::where(['SerialNo' => $SerialNo, 'respCode' => "00"])->whereBetween('createdAt', [$request->startofday . ' 00:00:00', $request->endofday . ' 23:59:59'])->sum('amount');
             $totalFailedAmount = PosLog::where(['SerialNo' => $SerialNo, 'respCode' => "007890"])->whereBetween('createdAt', [$request->startofday, $request->endofday])->sum('amount');
             $totalTransactionAmount = $totalSuccessAmount + $totalFailedAmount;
