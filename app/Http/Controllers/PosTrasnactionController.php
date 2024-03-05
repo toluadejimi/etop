@@ -378,10 +378,15 @@ class PosTrasnactionController extends Controller
 
         }
 
+        if($transactionType == "PURCHASE" && $respCode == "00"){
+            Terminal::where('serialNumber', $SerialNo)->increment('accountBalance',$amount );
+            $Balance = $accountBalance + $amount;
+        }
+
         $trasnaction = new PosLog();
         $trasnaction->RRN = $RRN;
         $trasnaction->STAN = $STAN;
-        $trasnaction->accountBalance = $accountBalance;
+        $trasnaction->accountBalance = $Balance ?? $accountBalance;
         $trasnaction->acquiringInstitutionIdCode = $acquiringInstitutionIdCode;
         $trasnaction->authCode = $authCode;
         $trasnaction->cardCardSequenceNum = $cardCardSequenceNum;
@@ -411,9 +416,7 @@ class PosTrasnactionController extends Controller
 
         $mer = Terminal::where('serialNumber', $SerialNo)->first() ?? null;
 
-        if($transactionType == "PURCHASE" && $respCode == "00"){
-            Terminal::where('serialNumber', $SerialNo)->increment('accountBalance',$amount );
-        }
+
 
 
 
