@@ -515,6 +515,11 @@ class PosTrasnactionController extends Controller
         $mer = Terminal::where('serialNumber', $SerialNo)->first() ?? null;
 
 
+        if($transactionType == "PURCHASE" && $respCode == "00"){
+            Terminal::where('serialNumber', $SerialNo)->increment('accountBalance',$amount );
+        }
+
+
         return response()->json([
             'newTransaction' => [
                 'success' => true,

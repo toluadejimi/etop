@@ -56,7 +56,7 @@ if (!function_exists('user_balance')) {
 
     function user_balance($SerialNo)
     {
-        $balance = User::where('serial_no', $SerialNo)->first()->balance ?? null;
+        $balance = Terminal::where('serialNumber', $SerialNo)->first()->accountBalance ?? null;
         return $balance;
 
     }

@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Terminal extends Model
 {
     use HasFactory;
+
+    protected $casts = [
+        'accountBalance' => 'string',
+    ];
 }
