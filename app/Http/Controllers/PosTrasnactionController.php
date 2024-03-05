@@ -23,6 +23,13 @@ class PosTrasnactionController extends Controller
     public function get_all_transaction(request $request)
     {
 
+//        date_default_timezone_set('UTC');
+//
+//        $current_time = time();
+//        $one_hour_earlier = $current_time - 3600; // 3600 seconds = 1 hour
+//        $new_time = date('Y-m-d H:i:s', $one_hour_earlier);
+//        echo "Current Time: " . date('Y-m-d H:i:s', $current_time) . "<br>";
+
         if($request->rrn != null){
 
             $SerialNo = $request->header('serialnumber');
