@@ -27,7 +27,6 @@ services:
             MYSQL_DATABASE: etop
             MYSQL_ROOT_PASSWORD: root
             MYSQL_PASSWORD: root
-            MYSQL_USER: root
         volumes:
             - db-data:/var/lib/mysql
     redis:
