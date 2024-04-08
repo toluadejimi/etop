@@ -24,10 +24,10 @@ services:
         ports:
             -   3306:3306
         environment:
-            MYSQL_DATABASE: ${DB_DATABASE}
-            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-            MYSQL_PASSWORD: ${DB_PASSWORD}
-            MYSQL_USER: ${DB_USERNAME}
+            MYSQL_DATABASE: etop
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_PASSWORD: root
+            MYSQL_USER: root
         volumes:
             - db-data:/var/lib/mysql
     redis:
@@ -45,6 +45,7 @@ services:
       environment:
         - PMA_ARBITRARY=1
 
+   
 
 volumes:
     db-data: ~
