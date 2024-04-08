@@ -53,12 +53,16 @@
             "@php artisan key:generate --ansi"
         ]
     },
+
+    
+
     "extra": {
         "laravel": {
             "dont-discover": []
         }
     },
     "config": {
+        "platform-check": false,
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true,
