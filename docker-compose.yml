@@ -36,12 +36,12 @@ services:
         command: redis-server --appendonly yes --requirepass  "secret"
         ports:
             - 6380:6379
-            
+
     phpmyadmin:
       image: phpmyadmin
       restart: always
       ports:
-        - 9001:80
+        - 9002:80
       environment:
         - PMA_ARBITRARY=1
 
