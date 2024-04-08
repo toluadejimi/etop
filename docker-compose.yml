@@ -1,7 +1,7 @@
-version: "3.8"
+version: "3.7"
 services:
-    api:
-        container_name: api
+    etop:
+        container_name: etop-merchant
         build:
             context: .
             target: php
