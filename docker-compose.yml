@@ -14,7 +14,7 @@ services:
         volumes:
             - ./:/var/www
         ports:
-            - 9000:8080
+            - 9001:8080
         depends_on:
             - database
             - redis
