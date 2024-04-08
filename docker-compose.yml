@@ -1,4 +1,5 @@
 version: "3.7"
+
 services:
     etop:
         container_name: etop-merchant
