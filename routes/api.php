@@ -28,7 +28,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('create-terminal', [AdminController::class, 'create_terminal']);
         Route::post('update-terminal', [AdminController::class, 'update_terminal']);
         Route::post('update-user', [AdminController::class, 'update_user']);
-        Route::post('list-users', [AdminController::class, 'get_users']);
+        Route::get('list-users', [AdminController::class, 'get_users']);
 
 
     });
