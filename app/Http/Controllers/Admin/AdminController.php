@@ -7,6 +7,7 @@ use App\Models\PosLog;
 use App\Models\Terminal;
 use App\Models\Transaction;
 use App\Models\User;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -94,18 +95,31 @@ class AdminController extends Controller
             $user->save();
 
 
-            DB::connection('second_db')->table('users')->insert([
-                'email' => $request->email,
-                'phone' => $request->phone,
-                'role' => $request->role,
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
-                'hos_no' => $request->hos_no,
-                'gender' => $request->gender,
-                'address_line1' => $request->address_line1,
-                'state' => $request->state,
-                'lga' => $request->lga,
-            ]);
+            try {
+
+                DB::connection('second_db')->table('users')->insert([
+                    'email' => $request->email,
+                    'phone' => $request->phone,
+                    'role' => $request->role,
+                    'first_name' => $request->first_name,
+                    'last_name' => $request->last_name,
+                    'hos_no' => $request->hos_no,
+                    'gender' => $request->gender,
+                    'address_line1' => $request->address_line1,
+                    'state' => $request->state,
+                    'lga' => $request->lga,
+                ]);
+
+                echo "Second database connected successfully.";
+
+
+            } catch (QueryException $e) {
+
+                echo "Failed to connect to the second database. $e";
+            }
+
+
+
 
 
 
