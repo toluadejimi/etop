@@ -11,13 +11,14 @@ use Illuminate\Support\Facades\Route;
 Route::post('store-user', [StoredataController::class, 'store_user']);
 Route::post('store-terminal', [StoredataController::class, 'store_terminal']);
 Route::post('update-terminal', [StoredataController::class, 'update_terminal']);
+Route::post('update-user', [StoredataController::class, 'update_user']);
+Route::post('store-transaction', [StoredataController::class, 'store_transaction']);
 
 
 
 
 Route::group(['prefix' => 'admin'], function () {
     Route::post('login', [AdminController::class, 'admin_login']);
-    Route::post('create-user', [AdminController::class, 'create_user']);
 
     Route::group(['middleware' => ['auth:api', 'acess']], function () {
 
@@ -26,10 +27,8 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('transaction-filter', [AdminController::class, 'get_all_transaction_by_filter']);
         Route::post('create-terminal', [AdminController::class, 'create_terminal']);
         Route::post('update-terminal', [AdminController::class, 'update_terminal']);
-
-
-
-
+        Route::post('update-user', [AdminController::class, 'update_user']);
+        Route::post('list-users', [AdminController::class, 'get_users']);
 
 
     });

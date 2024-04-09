@@ -285,6 +285,47 @@ class AdminController extends Controller
                 'pin' => $request->pin,
                 'phone' => $request->phone,
             ]);
+
+            try {
+
+                $curl = curl_init();
+                $data = array(
+                    'id' => $request->id,
+                    'first_name' => $request->first_name,
+                    'last_name' => $request->last_name,
+                    'email' => $request->email,
+                    'password' => $request->password,
+                    'pin' => $request->pin,
+                    'phone' => $request->phone,
+                );
+                $post_data = json_encode($data);
+
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => 'https://etopmerchant.com/api/update-user',
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_POSTFIELDS => $post_data,
+                    CURLOPT_HTTPHEADER => array(
+                        'Content-Type: application/json'
+                    ),
+                ));
+
+                $var = curl_exec($curl);
+                curl_close($curl);
+
+
+            } catch (QueryException $e) {
+                echo "$e";
+            }
+
+
+
+
             return response()->json([
                 'status' => true,
                 'data' => $users

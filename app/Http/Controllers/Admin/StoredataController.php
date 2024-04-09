@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\PosLog;
 use App\Models\Terminal;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -74,6 +75,75 @@ class StoredataController extends Controller
 
 
     }
+
+    public function update_user(request $request)
+    {
+
+        User::where('id', $request->id())->update([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'email' => $request->email,
+            'password' => $request->password,
+            'pin' => $request->pin,
+            'phone' => $request->phone,
+        ]);
+
+
+        return response([
+            'status' => true,
+            'message'=>'data updated'
+        ], 200);
+
+
+    }
+
+    public function store_transaction(request $request)
+    {
+
+        $trasnaction = new PosLog();
+        $trasnaction->RRN = $request->RRN;
+        $trasnaction->STAN = $request->STAN;
+        $trasnaction->accountBalance = $request->accountBalance;
+        $trasnaction->acquiringInstitutionIdCode = $request->acquiringInstitutionIdCode;
+        $trasnaction->authCode = $request->authCode;
+        $trasnaction->cardCardSequenceNum = $request->cardCardSequenceNum;
+        $trasnaction->cardExpireData = $request->cardExpireData;
+        $trasnaction->forwardingInstCode = $request->forwardingInstCode;
+        $trasnaction->merchantNo = $request->merchantNo;
+        $trasnaction->amount = $request->amount;
+        $trasnaction->accountType = $request->accountType;
+        $trasnaction->tid = $request->tid;
+        $trasnaction->merchantName = $request->merchantName;
+        $trasnaction->pan = $request->pan;
+        $trasnaction->pinBlock = $request->pinBlock;
+        $trasnaction->receiptNumber = $request->receiptNumber;
+        $trasnaction->respCode = $request->respCode;
+        $trasnaction->responseMessage = $request->responseMessage;
+        $trasnaction->status = $request->status;
+        $trasnaction->successResponse = $request->successResponse;
+        $trasnaction->systemTraceAuditNo = $request->systemTraceAuditNo;
+        $trasnaction->terminalId = $request->terminalId;
+        $trasnaction->transactionDate = $request->transactionDate;
+        $trasnaction->transactionDateTime = $request->transactionDateTime;
+        $trasnaction->transactionTime = $request->transactionTime;
+        $trasnaction->transactionType = $request->transactionType;
+        $trasnaction->cardName = $request->cardName;
+        $trasnaction->SerialNo = $request->SerialNo;
+        $trasnaction->createdAt= $request->created_at;
+        $trasnaction->updatedAt= $request->created_at;
+        $trasnaction->user_id= $request->user_id;
+        $trasnaction->save();
+
+        return response([
+            'status' => true,
+            'message'=>'data stored'
+        ], 200);
+
+
+    }
+
+
+
 
 
 
