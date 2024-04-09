@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Terminal;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class StoredataController extends Controller
 {
@@ -33,6 +35,45 @@ class StoredataController extends Controller
 
 
     }
+
+    public function store_terminal(request $request)
+    {
+        $term = new Terminal();
+        $term->tid = $request->tid;
+        $term->user_id = $request->user_id;
+        $term->ip = $request->ip;
+        $term->port = $request->port;
+        $term->ssl = $request->ssl;
+        $term->compKey1 = $request->compKey1;
+        $term->compKey2 = $request->compKey2;
+        $term->baseUrl = $request->baseurl;
+        $term->logoUrl = $request->logoUrl;
+        $term->serialNumber = $request->serialNumber;
+        $term->merchantName = $request->merchantName;
+        $term->mid = $request->mid;
+        $term->merchantaddress = $request->merchantaddress;
+        $term->pin = Hash::make($request->pin);
+
+        return response([
+            'status' => true,
+            'message'=>'data stored'
+        ], 200);
+
+
+    }
+
+    public function update_terminal(request $request)
+    {
+
+        Terminal::where('serialNumber', $request->serialNumber)->update(['user_id' => $request->user_id]);
+        return response([
+            'status' => true,
+            'message'=>'data updated'
+        ], 200);
+
+
+    }
+
 
 
 

@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::post('store-user', [StoredataController::class, 'store_user']);
+Route::post('store-terminal', [StoredataController::class, 'store_terminal']);
+Route::post('update-terminal', [StoredataController::class, 'update_terminal']);
+
 
 
 
@@ -21,6 +24,11 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('create-user', [AdminController::class, 'create_user']);
         Route::post('get-all-transactions', [AdminController::class, 'get_all_transactions']);
         Route::post('transaction-filter', [AdminController::class, 'get_all_transaction_by_filter']);
+        Route::post('create-terminal', [AdminController::class, 'create_terminal']);
+        Route::post('update-terminal', [AdminController::class, 'update_terminal']);
+
+
+
 
 
 
