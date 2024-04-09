@@ -399,6 +399,7 @@ class PosTrasnactionController extends Controller
         $one_hour_later = $current_time + 3600; // 3600 seconds = 1 hour
         $created_at = date('Y-m-d H:i:s', $one_hour_later);
 
+        $user_id = Terminal::where('serialNumber', $SerialNo)->first()->user_id ?? null;
 
 
         $trasnaction = new PosLog();
@@ -432,6 +433,8 @@ class PosTrasnactionController extends Controller
         $trasnaction->SerialNo = $SerialNo;
         $trasnaction->createdAt= $created_at;
         $trasnaction->updatedAt= $created_at;
+        $trasnaction->user_id= $user_id;
+
         $trasnaction->save();
 
 

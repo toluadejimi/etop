@@ -1,9 +1,30 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\TerminalController;
 use App\Http\Controllers\PosTrasnactionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+
+Route::group(['prefix' => 'admin'], function () {
+    Route::post('login', [AdminController::class, 'admin_login']);
+    Route::post('create-user', [AdminController::class, 'create_user']);
+
+    Route::group(['middleware' => ['auth:api', 'acess']], function () {
+
+        Route::post('get-all-transactions', [AdminController::class, 'get_all_transactions']);
+        Route::post('transaction-filter', [AdminController::class, 'get_all_transaction_by_filter']);
+
+
+
+    });
+
+
+
+    });
+
+
 
 
 Route::group(['prefix' => 'v1'], function () {
