@@ -97,7 +97,7 @@ class AdminController extends Controller
 
             try {
 
-                DB::connection('second_db')->table('users')->insert([
+                $ddd = DB::connection('second_db')->table('users')->insert([
                     'email' => $request->email,
                     'phone' => $request->phone,
                     'role' => $request->role,
@@ -110,7 +110,7 @@ class AdminController extends Controller
                     'lga' => $request->lga,
                 ]);
 
-                echo "Second database connected successfully.";
+                dd($ddd);
 
 
             } catch (QueryException $e) {
