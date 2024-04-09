@@ -121,10 +121,6 @@ class AdminController extends Controller
 
                 $var = curl_exec($curl);
                 curl_close($curl);
-                $var = json_decode($var);
-
-                dd($var);
-
 
 
             } catch (QueryException $e) {
