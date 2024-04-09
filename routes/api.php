@@ -1,10 +1,15 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\StoredataController;
 use App\Http\Controllers\TerminalController;
 use App\Http\Controllers\PosTrasnactionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+
+Route::post('store-user', [StoredataController::class, 'store_user']);
+
 
 
 Route::group(['prefix' => 'admin'], function () {

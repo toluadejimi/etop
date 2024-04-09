@@ -4,29 +4,22 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\PosLog;
-use App\Models\Terminal;
-use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Laravel\Passport\Passport;
 
 class AdminController extends Controller
 {
 
 
-
-
-
     public function admin_login(request $request)
     {
 
-        if(Auth::attempt([
+        if (Auth::attempt([
             'email' => $request->email, 'password' => $request->password],
-            $request->get('remember'))){
+            $request->get('remember'))) {
 
             $user['user'] = Auth::user();
             $user['token'] = auth()->user()->createToken('API Token')->accessToken;
@@ -54,30 +47,28 @@ class AdminController extends Controller
     {
 
 
-        if(Auth::user()->role != 1){
+        if (Auth::user()->role != 1) {
             return response()->json([
                 'status' => false,
                 'message' => "You dont have permission to create a user"
             ], 422);
         }
 
-        if(Auth::user()->status == 1){
+        if (Auth::user()->status == 1) {
             return response()->json([
                 'status' => false,
                 'message' => "You dont have permission to create a user"
             ], 422);
         }
-
-
 
 
         $usr_status = User::where('email', $request->email)->first()->email ?? null;
-        if($usr_status == $request->email){
-                return response()->json([
-                    'status' => false,
-                    'message' => "User Already Exist"
-                ], 422);
-        }else{
+        if ($usr_status == $request->email) {
+            return response()->json([
+                'status' => false,
+                'message' => "User Already Exist"
+            ], 422);
+        } else {
 
 
             $user = new User();
@@ -87,8 +78,8 @@ class AdminController extends Controller
             $user->first_name = $request->first_name;
             $user->last_name = $request->last_name;
             $user->password = bcrypt($request->password);
-            $user->hos_no= $request->hos_no;
-            $user->gender =$request->gender;
+            $user->hos_no = $request->hos_no;
+            $user->gender = $request->gender;
             $user->address_line1 = $request->address_line1;
             $user->state = $request->state;
             $user->lga = $request->lga;
@@ -97,7 +88,8 @@ class AdminController extends Controller
 
             try {
 
-                $ddd = DB::connection('second_db')->table('users')->insert([
+                $curl = curl_init();
+                $data = array(
                     'email' => $request->email,
                     'phone' => $request->phone,
                     'role' => $request->role,
@@ -108,26 +100,35 @@ class AdminController extends Controller
                     'address_line1' => $request->address_line1,
                     'state' => $request->state,
                     'lga' => $request->lga,
-                ]);
 
-                dd($ddd);
+                );
+                $post_data = json_encode($data);
 
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => 'https://etopmerchant.com/api/store-user',
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_POSTFIELDS => $post_data,
+                    CURLOPT_HTTPHEADER => array(
+                        'Content-Type: application/json'
+                    ),
+                ));
+
+                curl_close($curl);
 
             } catch (QueryException $e) {
-
-                echo "Failed to connect to the second database. $e";
+                echo "$e";
             }
 
-
-
-
-
-
-
-                return response()->json([
-                    'status' => true,
-                    'message' => "User Created Successfully"
-                ], 200);
+            return response()->json([
+                'status' => true,
+                'message' => "User Created Successfully"
+            ], 200);
 
         }
 
@@ -222,7 +223,7 @@ class AdminController extends Controller
         if ($startofday != null && $endofday != null) {
 
             $data = PosLog::latest()->whereBetween('createdAt', [$startofday . ' 00:00:00', $endofday . ' 23:59:59'])
-                ->where('user_id',Auth::id())->take($limit)->get() ?? null;
+                ->where('user_id', Auth::id())->take($limit)->get() ?? null;
 
             return response()->json([
                 'success' => true,
@@ -235,7 +236,7 @@ class AdminController extends Controller
 
         if ($startofday == null && $endofday == null && $rrn != null) {
 
-            $data = PosLog::where('RRN', $rrn)->where('user_id',Auth::id())->take($limit)->get() ?? null;
+            $data = PosLog::where('RRN', $rrn)->where('user_id', Auth::id())->take($limit)->get() ?? null;
 
             return response()->json([
                 'success' => true,
@@ -247,12 +248,10 @@ class AdminController extends Controller
         }
 
 
-
-
         if ($startofday != null && $endofday != null) {
 
             $data = PosLog::latest()->whereBetween('createdAt', [$startofday . ' 00:00:00', $endofday . ' 23:59:59'])
-                ->where('user_id',Auth::id())->take($limit)->get() ?? null;
+                ->where('user_id', Auth::id())->take($limit)->get() ?? null;
 
             return response()->json([
                 'success' => true,
@@ -265,7 +264,7 @@ class AdminController extends Controller
 
         if ($startofday != null && $endofday == null) {
 
-            $data = PosLog::latest()->wheredate('createdAt', $startofday)->where('user_id',Auth::id())->take($limit)->get() ?? null;
+            $data = PosLog::latest()->wheredate('createdAt', $startofday)->where('user_id', Auth::id())->take($limit)->get() ?? null;
 
             return response()->json([
                 'success' => true,
@@ -277,16 +276,7 @@ class AdminController extends Controller
         }
 
 
-
-
-
-
-
-
-
-
-
-            if ($rrn != null && $startofday != null && $endofday != null) {
+        if ($rrn != null && $startofday != null && $endofday != null) {
 
             $data = PosLog::whereBetween('createdAt', [$startofday . ' 00:00:00', $endofday . ' 23:59:59'])
                 ->where([
@@ -323,9 +313,6 @@ class AdminController extends Controller
 
 
     }
-
-
-
 
 
 }
