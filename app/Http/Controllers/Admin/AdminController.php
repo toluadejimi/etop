@@ -93,7 +93,6 @@ class AdminController extends Controller
             $user->lga = $request->lga;
             $user->save();
 
-            dd('000');
 
             DB::connection('second_db')->table('users')->insert([
                 'email' => $request->email,
