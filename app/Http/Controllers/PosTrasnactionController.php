@@ -86,7 +86,7 @@ class PosTrasnactionController extends Controller
         if ($request->startofday == null && $request->endofday == null) {
 
             $SerialNo = $request->header('serialnumber');
-            $data = PosLog::latest()->where('SerialNo', $SerialNo)->take('20')->get() ?? null;
+            $data = PosLog::latest()->where('SerialNo', $SerialNo)->take('50')->get() ?? null;
             unset($data->created_at);
             unset($data->updated_at);
 
@@ -630,7 +630,7 @@ class PosTrasnactionController extends Controller
         $page = $request->page;
         $limit = $request->limit;
         if ($limit == null) {
-            $limit = 20;
+            $limit = 200;
         } else {
             $limit = $request->limit;
         }
@@ -691,7 +691,7 @@ class PosTrasnactionController extends Controller
 
 
             $data = Transaction::whereBetween('createdAt', [$startofday . ' 00:00:00', $endofday . ' 23:59:59'])
-                ->where('SerialNo', $SerialNo)->take(20)->get() ?? null;
+                ->where('SerialNo', $SerialNo)->get() ?? null;
 
             if ($data->isEmpty()) {
 

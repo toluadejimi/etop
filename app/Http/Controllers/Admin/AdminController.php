@@ -252,6 +252,58 @@ class AdminController extends Controller
     }
 
 
+    public function get_users(request $request)
+    {
+
+        if (Auth::user()->role == 1 || Auth::user()->role == 2) {
+            $users = User::where('role', 3)->get();
+            return response()->json([
+                'status' => true,
+                'data' => $users
+            ], 200);
+
+        } else {
+
+            return response()->json([
+                'status' => false,
+                'message' => "You dont have permission to create a terminal"
+            ], 422);
+        }
+    }
+
+
+    public function update_user(request $request)
+    {
+
+        if (Auth::user()->role == 1 || Auth::user()->role == 2) {
+
+            $users = User::where('id', $request->id())->update([
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'email' => $request->email,
+                'password' => $request->password,
+                'pin' => $request->pin,
+                'phone' => $request->phone,
+            ]);
+            return response()->json([
+                'status' => true,
+                'data' => $users
+            ], 200);
+
+
+
+        } else {
+
+            return response()->json([
+                'status' => false,
+                'message' => "You dont have permission to create a terminal"
+            ], 422);
+        }
+    }
+
+
+
+
     public function update_terminal(request $request)
     {
 
