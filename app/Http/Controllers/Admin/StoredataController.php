@@ -53,6 +53,7 @@ class StoredataController extends Controller
         $term->mid = $request->mid;
         $term->merchantaddress = $request->merchantaddress;
         $term->pin = Hash::make($request->pin);
+        $term->save();
 
         return response([
             'status' => true,
