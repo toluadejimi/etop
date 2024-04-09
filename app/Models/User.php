@@ -19,7 +19,6 @@ class User extends Authenticatable
      */
 
     protected $connection = 'second_db';
-
     protected $fillable = [
         'name',
         'email',

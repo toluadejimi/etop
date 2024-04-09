@@ -9,6 +9,7 @@ use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\Passport;
 
@@ -85,8 +86,29 @@ class AdminController extends Controller
             $user->first_name = $request->first_name;
             $user->last_name = $request->last_name;
             $user->password = bcrypt($request->password);
-
+            $user->hos_no= $request->hos_no;
+            $user->gender =$request->gender;
+            $user->address_line1 = $request->address_line1;
+            $user->state = $request->state;
+            $user->lga = $request->lga;
             $user->save();
+
+
+            DB::connection('second_db')->table('users')->insert([
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'role' => $request->role,
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'hos_no' => $request->hos_no,
+                'gender' => $request->gender,
+                'address_line1' => $request->address_line1,
+                'state' => $request->state,
+                'lga' => $request->lga,
+            ]);
+
+
+
 
                 return response()->json([
                     'status' => true,
