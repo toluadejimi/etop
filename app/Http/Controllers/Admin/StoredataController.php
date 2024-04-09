@@ -26,6 +26,11 @@ class StoredataController extends Controller
         $user->lga = $request->lga;
         $user->save();
 
+        return response([
+            'status' => true,
+            'message'=>'data stored'
+        ], 200);
+
 
     }
 
