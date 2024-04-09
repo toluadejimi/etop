@@ -17,6 +17,9 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+
+    protected $connection = 'second_db';
+
     protected $fillable = [
         'name',
         'email',

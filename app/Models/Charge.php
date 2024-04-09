@@ -7,5 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Charge extends Model
 {
+    protected $connection = 'second_db';
     use HasFactory;
 }

@@ -51,6 +51,24 @@ class AdminController extends Controller
     public function create_user(request $request)
     {
 
+
+        if(Auth::user()->role != 1){
+            return response()->json([
+                'status' => false,
+                'message' => "You dont have permission to create a user"
+            ], 422);
+        }
+
+        if(Auth::user()->status == 1){
+            return response()->json([
+                'status' => false,
+                'message' => "You dont have permission to create a user"
+            ], 422);
+        }
+
+
+
+
         $usr_status = User::where('email', $request->email)->first()->email ?? null;
         if($usr_status == $request->email){
                 return response()->json([

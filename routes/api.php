@@ -13,6 +13,7 @@ Route::group(['prefix' => 'admin'], function () {
 
     Route::group(['middleware' => ['auth:api', 'acess']], function () {
 
+        Route::post('create-user', [AdminController::class, 'create_user']);
         Route::post('get-all-transactions', [AdminController::class, 'get_all_transactions']);
         Route::post('transaction-filter', [AdminController::class, 'get_all_transaction_by_filter']);
 

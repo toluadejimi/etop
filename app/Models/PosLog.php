@@ -8,8 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class PosLog extends Model
 {
     use HasFactory;
-
-
+    protected $connection = 'second_db';
 
     protected $casts = [
         'accountBalance' => 'string',
