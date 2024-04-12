@@ -130,6 +130,7 @@ class AdminController extends Controller
 
             return response()->json([
                 'status' => true,
+                'data' => $user,
                 'message' => "User Created Successfully"
             ], 200);
 
