@@ -21,6 +21,8 @@ Route::post('store-transaction', [StoredataController::class, 'store_transaction
 Route::post('create-bank', [StoredataController::class, 'create_bank']);
 Route::post('update-bank', [StoredataController::class, 'update_bank']);
 Route::post('delete_bank', [StoredataController::class, 'delete_bank']);
+Route::post('delete_user', [StoredataController::class, 'delete_user']);
+
 
 
 Route::group(['prefix' => 'admin'], function () {
@@ -43,6 +45,10 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('create-user', [UserController::class, 'create_user']);
         Route::post('update-user', [UserController::class, 'update_user']);
         Route::get('list-users', [UserController::class, 'get_users']);
+        Route::get('list-customer-users', [UserController::class, 'get_customer_users']);
+        Route::get('list-bank-users', [UserController::class, 'get_bank_users']);
+        Route::get('delete-users', [UserController::class, 'delete_user']);
+
 
 
         //Transaction

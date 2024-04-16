@@ -84,8 +84,7 @@ class StoredataController extends Controller
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'email' => $request->email,
-            'password' => $request->password,
-            'pin' => $request->pin,
+            'bank_id' => $request->bank_id,
             'phone' => $request->phone,
         ]);
 
@@ -188,6 +187,20 @@ class StoredataController extends Controller
     public function delete_bank(request $request)
     {
         Bank::where('id', $request->id)->delete();
+        return response([
+            'status' => true,
+            'message'=>'successful'
+        ], 200);
+
+
+
+
+
+    }
+
+    public function delete_user(request $request)
+    {
+        User::where('id', $request->id)->delete();
         return response([
             'status' => true,
             'message'=>'successful'

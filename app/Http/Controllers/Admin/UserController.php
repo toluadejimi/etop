@@ -111,6 +111,46 @@ class UserController extends Controller
     {
 
         if (Auth::user()->role == 1 || Auth::user()->role == 2) {
+            $users = User::all();
+            return response()->json([
+                'status' => true,
+                'data' => $users
+            ], 200);
+
+        } else {
+
+            return response()->json([
+                'status' => false,
+                'message' => "You dont have permission to create a terminal"
+            ], 422);
+        }
+    }
+
+
+    public function get_customer_users(request $request)
+    {
+
+        if (Auth::user()->role == 1 || Auth::user()->role == 2) {
+            $users = User::where('role', 4)->get();
+            return response()->json([
+                'status' => true,
+                'data' => $users
+            ], 200);
+
+        } else {
+
+            return response()->json([
+                'status' => false,
+                'message' => "You dont have permission to create a terminal"
+            ], 422);
+        }
+    }
+
+
+    public function get_bank_users(request $request)
+    {
+
+        if (Auth::user()->role == 1 || Auth::user()->role == 2) {
             $users = User::where('role', 3)->get();
             return response()->json([
                 'status' => true,
@@ -126,6 +166,7 @@ class UserController extends Controller
         }
     }
 
+
     public function update_user(request $request)
     {
 
@@ -135,9 +176,9 @@ class UserController extends Controller
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,
-                'password' => $request->password,
-                'pin' => $request->pin,
                 'phone' => $request->phone,
+                'bank_id' => $request->bank_id,
+
             ]);
 
             try {
@@ -148,9 +189,9 @@ class UserController extends Controller
                     'first_name' => $request->first_name,
                     'last_name' => $request->last_name,
                     'email' => $request->email,
-                    'password' => $request->password,
-                    'pin' => $request->pin,
                     'phone' => $request->phone,
+                    'bank_id' => $request->bank_id,
+
                 );
                 $post_data = json_encode($data);
 
@@ -195,6 +236,64 @@ class UserController extends Controller
             ], 422);
         }
     }
+
+    public function delete_user(request $request)
+    {
+
+        if (Auth::user()->role == 1 || Auth::user()->role == 2) {
+
+            User::where('id', $request->id)->delete();
+
+            try {
+
+                $curl = curl_init();
+                $data = array(
+                    'id' => $request->id,
+                );
+                $post_data = json_encode($data);
+
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => 'https://etopmerchant.com/api/delete-user',
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_POSTFIELDS => $post_data,
+                    CURLOPT_HTTPHEADER => array(
+                        'Content-Type: application/json'
+                    ),
+                ));
+
+                $var = curl_exec($curl);
+                curl_close($curl);
+
+
+            } catch (QueryException $e) {
+                echo "$e";
+            }
+
+
+
+
+            return response()->json([
+                'status' => true,
+                'data' => $users
+            ], 200);
+
+
+
+        } else {
+
+            return response()->json([
+                'status' => false,
+                'message' => "You dont have permission to create a terminal"
+            ], 422);
+        }
+    }
+
 
     public function get_all_by_serial_logged_data(request $request)
     {
