@@ -17,12 +17,14 @@ class DashboardController extends Controller
 
         if (Auth::user()->role == 1 || Auth::user()->role == 2 ) {
 
-            $data['users'] = User::all();
+            $data['users'] = User::count();
             $data['successful_transactions'] = PosLog::latest()->where('transactionType', 'PURCHASE')->where('status', 1)->sum('amount');
             $data['failed_transactions'] = PosLog::latest()->where('transactionType', 'PURCHASE')->where('status', 0)->sum('amount');
-            $data['all_transactions'] = PosLog::latest()->get();
             $data['all_terminals'] = Terminal::count();
             $data['all_banks'] = Bank::count();
+            $data['all_transactions'] = PosLog::latest()->take(100)->get();
+
+
 
             return response()->json([
                 'status' => true,
@@ -44,16 +46,16 @@ class DashboardController extends Controller
 
             }
 
-            $data['users'] = User::where('bank_id', $bank_id)->get();
-
+            $data['users'] = User::where('bank_id', $bank_id)->count();
             $data['successful_transactions'] = PosLog::latest()->where('transactionType', 'PURCHASE')
                 ->where(['status'  => 1, 'bank_id' => $bank_id])->sum('amount');
 
             $data['failed_transactions'] = PosLog::latest()->where('transactionType', 'PURCHASE')
                 ->where(['status'  => 0, 'bank_id' => $bank_id])->sum('amount');
 
-            $data['all_transactions'] = PosLog::latest()->where('bank_id', $bank_id)->get();
             $data['all_terminals'] = Terminal::where('bank_id', $bank_id)->count();
+            $data['all_transactions'] = PosLog::latest()->where('bank_id', $bank_id)->get->take(100)->get();
+
 
             return response()->json([
                 'status' => true,
@@ -81,8 +83,10 @@ class DashboardController extends Controller
             $data['failed_transactions'] = PosLog::latest()->where('transactionType', 'PURCHASE')
                 ->where(['status'  => 0, 'user_id' => Auth::id()])->sum('amount');
 
-            $data['all_transactions'] = PosLog::latest()->where('user_id', Auth::id())->get();
             $data['all_terminals'] = Terminal::where('user_id', Auth::id())->count();
+
+            $data['all_transactions'] = PosLog::latest()->where('user_id', Auth::id())->take()->get();
+
 
             return response()->json([
                 'status' => true,
