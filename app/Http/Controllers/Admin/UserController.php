@@ -280,7 +280,7 @@ class UserController extends Controller
 
             return response()->json([
                 'status' => true,
-                'data' => $users
+                'message' => "User deleted successfully"
             ], 200);
 
 
