@@ -200,4 +200,31 @@ class TerminalController extends Controller
     }
 
 
+    public
+    function view_all_terminal(request $request)
+    {
+
+
+        $ter = Terminal::all() ?? null;
+        if ($ter == null) {
+            $message = "No Terminal Found";
+            return error_response($message);
+
+        }
+
+
+        return response()->json([
+            'status' => true,
+            'terminal' => null,
+            'terminals' => $ter,
+            'error' => null
+        ], 200);
+
+
+    }
+
+
+
+
+
 }

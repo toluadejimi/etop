@@ -2,15 +2,14 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\BankController;
-use App\Http\Controllers\Admin\StoredataController;
 use App\Http\Controllers\Admin\DashboardController;
-
-use App\Http\Controllers\TerminalController;
-use App\Http\Controllers\PosTrasnactionController;
-
-use Illuminate\Http\Request;
+use App\Http\Controllers\Admin\StoredataController;
+use App\Http\Controllers\Admin\TerminalController;
+use App\Http\Controllers\Admin\TransactionController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\POS\PosTrasnactionController;
+use App\Http\Controllers\POS\TerminalopController;
 use Illuminate\Support\Facades\Route;
-
 
 
 //other database
@@ -22,8 +21,6 @@ Route::post('store-transaction', [StoredataController::class, 'store_transaction
 Route::post('create-bank', [StoredataController::class, 'create_bank']);
 Route::post('update-bank', [StoredataController::class, 'update_bank']);
 Route::post('delete_bank', [StoredataController::class, 'delete_bank']);
-
-
 
 
 Route::group(['prefix' => 'admin'], function () {
@@ -42,52 +39,41 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('dashboard', [DashboardController::class, 'dashboard_data']);
 
 
+        //User
+        Route::post('create-user', [UserController::class, 'create_user']);
+        Route::post('update-user', [UserController::class, 'update_user']);
+        Route::get('list-users', [UserController::class, 'get_users']);
 
 
+        //Transaction
+        Route::post('get-all-transactions', [TransactionController::class, 'get_all_transactions']);
+        Route::post('transaction-filter', [TransactionController::class, 'get_all_transaction_by_filter']);
 
 
-
-
-
-        Route::post('create-user', [AdminController::class, 'create_user']);
-        Route::post('get-all-transactions', [AdminController::class, 'get_all_transactions']);
-        Route::post('transaction-filter', [AdminController::class, 'get_all_transaction_by_filter']);
-        Route::post('create-terminal', [AdminController::class, 'create_terminal']);
-        Route::post('update-terminal', [AdminController::class, 'update_terminal']);
-        Route::post('update-user', [AdminController::class, 'update_user']);
-        Route::get('list-users', [AdminController::class, 'get_users']);
-
-
-    });
-
+        //Terminal
+        Route::post('create-terminal', [TerminalController::class, 'create_terminal']);
+        Route::post('update-terminal', [TerminalController::class, 'update_terminal']);
 
 
     });
 
 
+});
 
 
 Route::group(['prefix' => 'v1'], function () {
 
-    Route::get('get-details', [TerminalController::class, 'get_terminal_details']);
+    Route::get('get-details', [TerminalopController::class, 'get_terminal_details']);
     Route::post('initiate-transaction', [PosTrasnactionController::class, 'EtopPosLogs']);
     Route::any('get-logged-data', [PosTrasnactionController::class, 'get_logged_data']);
-    Route::post('reset-pin', [TerminalController::class, 'reset_pin']);
-    Route::post('verify-pin', [TerminalController::class, 'verify_pin']);
+    Route::post('reset-pin', [TerminalopController::class, 'reset_pin']);
+    Route::post('verify-pin', [TerminalopController::class, 'verify_pin']);
     Route::any('get-all-logged-data', [PosTrasnactionController::class, 'get_all_by_serial_logged_data']);
     Route::any('get-all-transactions', [PosTrasnactionController::class, 'get_all_transaction']);
 
 
     Route::any('get-all-logged-data/get-all-transactions', [PosTrasnactionController::class, 'get_all_transaction_by_filter']);
     Route::any('complete-transaction', [PosTrasnactionController::class, 'EtopPos']);
-
-    Route::any('create-terminal', [TerminalController::class, 'create_terminal']);
-
-    Route::any('all-terminals', [TerminalController::class, 'view_all_terminal']);
-
-    Route::any('delete-terminal', [TerminalController::class, 'delete_terminal']);
-
-
 
 
 });

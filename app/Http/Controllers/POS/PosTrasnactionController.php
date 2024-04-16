@@ -1,22 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\POS;
 
-use Carbon\Carbon;
-use App\Models\User;
-use App\Models\Charge;
-use App\Models\PosLog;
-use Defuse\Crypto\Key;
-use App\Models\Terminal;
-use Defuse\Crypto\Crypto;
-use App\Models\SuperAgent;
-use App\Models\Transaction;
-use http\Env\Response;
-use Illuminate\Database\QueryException;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
+use App\Models\PosLog;
+use App\Models\SuperAgent;
+use App\Models\Terminal;
+use App\Models\Transaction;
+use Illuminate\Http\Request;
 
 class PosTrasnactionController extends Controller
 {
