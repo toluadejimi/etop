@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Bank;
 use App\Models\PosLog;
 use App\Models\Terminal;
 use App\Models\User;
@@ -141,6 +142,63 @@ class StoredataController extends Controller
 
 
     }
+
+
+    public function create_bank(request $request)
+    {
+        $bank = new Bank();
+        $bank->name = $request->name;
+        $bank->email = $request->email;
+        $bank->save();
+
+        $usr = new User();
+        $usr->first_name = $request->name;
+        $usr->last_name = $request->name;
+        $usr->email = $request->email;
+        $usr->role = 3;
+        $usr->bank_id = $bank->id;
+        $usr->password = bcrypt('123456');
+        $usr->save();
+
+        return response([
+            'status' => true,
+            'message'=>'data stored'
+        ], 200);
+
+
+    }
+
+    public function update_bank(request $request)
+    {
+        Bank::where('id', $request->id)->update([
+            'name' => $request->name,
+            'email' => $request->email,
+
+        ]);
+
+        return response([
+            'status' => true,
+            'message'=>'successful'
+        ], 200);
+
+
+    }
+
+
+    public function delete_bank(request $request)
+    {
+        Bank::where('id', $request->id)->delete();
+        return response([
+            'status' => true,
+            'message'=>'successful'
+        ], 200);
+
+
+
+
+
+    }
+
 
 
 

@@ -10,6 +10,12 @@ use Illuminate\Support\Facades\Hash;
 class TerminalController extends Controller
 {
 
+
+
+
+
+
+
     public function create_terminal(request $request)
     {
 
