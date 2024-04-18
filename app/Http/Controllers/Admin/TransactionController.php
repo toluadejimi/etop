@@ -9,146 +9,294 @@ use Illuminate\Support\Facades\Auth;
 
 class TransactionController extends Controller
 {
-    public function get_all_transactions(request $request)
+    public function get_all_transactions($limit)
     {
-        $get_all_transaction = PosLog::latest()->where('user_id', Auth::id())->get();
-        return response()->json([
-            'status' => true,
-            'data' => $get_all_transaction
-        ], 200);
+
+
+        if (Auth::user()->role == 1 || Auth::user()->role == 2) {
+
+
+            if($limit == null){
+                return response()->json([
+                    'status' => false,
+                    'message' => "Add Transaction limit to your request"
+                ], 422);
+
+            }
+
+            $get_all_transaction = PosLog::latest()->take($limit)->get();
+            return response()->json([
+                'status' => true,
+                'data' => $get_all_transaction
+            ], 200);
+
+        }
+
+
+        if (Auth::user()->role == 3) {
+
+            if($limit == null){
+                return response()->json([
+                    'status' => false,
+                    'message' => "Add Transaction limit to your request"
+                ], 422);
+
+            }
+            $get_all_transaction = PosLog::latest()->where('bank_id',Auth::user()->bank_id )->take($limit)->get();
+            return response()->json([
+                'status' => true,
+                'data' => $get_all_transaction
+            ], 200);
+
+        }
+
+
+        if (Auth::user()->role == 4) {
+
+            if($limit == null){
+                return response()->json([
+                    'status' => false,
+                    'message' => "Add Transaction limit to your request"
+                ], 422);
+
+            }
+            $get_all_transaction = PosLog::latest()->where('user_id',Auth::id() )->take($limit)->get();
+            return response()->json([
+                'status' => true,
+                'data' => $get_all_transaction
+            ], 200);
+
+        }else{
+
+            return response()->json([
+                'status' => false,
+                'message' => "You dont have permission"
+            ], 422);
+
+
+        }
+
+
+
 
     }
 
-    public function get_logged_data(request $request)
-    {
-
-        $SerialNo = $request->header('serialnumber');
-        $account_balance = user_balance($SerialNo);
-        $RRN = $request->RRN;
-
-        if ($SerialNo == null) {
-            $message = "Serial Number can not be empty";
-            return error_response($message);
-        }
-
-        $data = PosLog::select('terminalID', 'amount', 'transactionType', 'RRN', 'pan', 'cardName', 'serialNO', 'respCode', 'respCode', 'createdAt', 'updatedAt')
-            ->where('RRN', $RRN)->first() ?? null;
-
-        if ($data == null) {
-            $message = 'Transaction not found';
-            error_response($message);
-        }
 
 
-        return response()->json([
-            'status' => true,
-            'loggedData' => $data,
-            'allLoggedData' => null,
-            'error' => null
-        ], 200);
-
-
-    }
-
-    public function get_all_transaction_by_filter(request $request)
+    public function get_transactions_by_filter(request $request, $limit)
     {
 
 
-        $rrn = $request->rrn;
-        $startofday = $request->from;
-        $endofday = $request->to;
-        $limit = $request->limit;
-        if ($limit == null) {
-            $limit = 50;
-        } else {
-            $limit = $request->limit;
-        }
-        $type = $request->type;
+        if (Auth::user()->role == 1 || Auth::user()->role == 2) {
+
+            $rrn = $request->rrn;
+            $startofday = $request->from;
+            $endofday = $request->to;
 
 
-        if ($startofday != null && $endofday != null) {
 
-            $data = PosLog::latest()->whereBetween('createdAt', [$startofday . ' 00:00:00', $endofday . ' 23:59:59'])
-                ->where('user_id', Auth::id())->take($limit)->get() ?? null;
-
-            return response()->json([
-                'success' => true,
-                'transaction' => $data,
-
-            ], 200);
+            if ($limit == null) {
+                $limit1 = 50;
+            } else {
+                $limit1 = $limit;
+            }
+            $type = $request->type;
 
 
-        }
-
-        if ($startofday == null && $endofday == null && $rrn != null) {
-
-            $data = PosLog::where('RRN', $rrn)->where('user_id', Auth::id())->take($limit)->get() ?? null;
-
-            return response()->json([
-                'success' => true,
-                'transaction' => $data,
-
-            ], 200);
 
 
-        }
 
 
-        if ($startofday != null && $endofday != null) {
+            if ($startofday != null && $endofday != null) {
 
-            $data = PosLog::latest()->whereBetween('createdAt', [$startofday . ' 00:00:00', $endofday . ' 23:59:59'])
-                ->where('user_id', Auth::id())->take($limit)->get() ?? null;
-
-            return response()->json([
-                'success' => true,
-                'transaction' => $data,
-
-            ], 200);
-
-
-        }
-
-        if ($startofday != null && $endofday == null) {
-
-            $data = PosLog::latest()->wheredate('createdAt', $startofday)->where('user_id', Auth::id())->take($limit)->get() ?? null;
-
-            return response()->json([
-                'success' => true,
-                'transaction' => $data,
-
-            ], 200);
-
-
-        }
-
-
-        if ($rrn != null && $startofday != null && $endofday != null) {
-
-            $data = PosLog::whereBetween('createdAt', [$startofday . ' 00:00:00', $endofday . ' 23:59:59'])
-                ->where([
-                    'RRN' => $rrn,
-                    'amount' => $amount,
-                ])->take($limit)->get() ?? null;
-
-
-            if ($data->isEmpty()) {
+                $data = PosLog::latest()->whereBetween('createdAt', [$startofday . ' 00:00:00', $endofday . ' 23:59:59'])
+                    ->take($limit1)->get() ?? null;
 
                 return response()->json([
                     'success' => true,
-                    'transaction' => [],
+                    'data' => $data,
+
                 ], 200);
 
 
             }
 
-            return response()->json([
-                'success' => false,
-                'transaction' => $data,
+            if ($startofday == null && $endofday == null && $rrn != null) {
 
-            ], 200);
+                $data = PosLog::where('RRN', $rrn)->take($limit)->get() ?? null;
 
+                return response()->json([
+                    'success' => true,
+                    'data' => $data,
+
+                ], 200);
+
+
+            }
+
+
+            if ($startofday != null && $endofday == null) {
+
+                $data = PosLog::latest()->whereDate('createdAt', $startofday)->take($limit)->get() ?? null;
+
+                return response()->json([
+                    'success' => true,
+                    'data' => $data,
+
+                ], 200);
+
+
+            }
+
+            if ($startofday == null && $endofday != null) {
+
+                $data = PosLog::latest()->wheredate('createdAt', $endofday)->take($limit)->get() ?? null;
+
+                return response()->json([
+                    'success' => true,
+                    'data' => $data,
+
+                ], 200);
+
+
+            }
+
+
+
+
+            if ($rrn != null && $startofday != null && $endofday != null) {
+
+                $data = PosLog::whereBetween('createdAt', [$startofday . ' 00:00:00', $endofday . ' 23:59:59'])
+                    ->where([
+                        'RRN' => $rrn,
+                    ])->take($limit)->get() ?? null;
+
+
+                if ($data->isEmpty()) {
+
+                    return response()->json([
+                        'success' => true,
+                        'data' => [],
+                    ], 200);
+
+
+                }
+
+                return response()->json([
+                    'success' => false,
+                    'transaction' => "No data Found",
+
+                ], 200);
+
+
+            }
 
         }
+
+
+        if (Auth::user()->role == 3) {
+
+            $rrn = $request->rrn;
+            $startofday = $request->from;
+            $endofday = $request->to;
+
+
+            if ($limit == null) {
+                $limit1 = 50;
+            } else {
+                $limit1 = $limit;
+            }
+            $type = $request->type;
+
+
+
+            if ($startofday != null && $endofday != null) {
+
+                $data = PosLog::latest()->whereBetween('createdAt', [$startofday . ' 00:00:00', $endofday . ' 23:59:59'])
+                    ->take($limit1)->where('bank_id', Auth::user()->bank_id)->get() ?? null;
+
+                return response()->json([
+                    'success' => true,
+                    'data' => $data,
+
+                ], 200);
+
+
+            }
+
+            if ($startofday == null && $endofday == null && $rrn != null) {
+
+                $data = PosLog::where('RRN', $rrn)->where('bank_id', Auth::user()->bank_id)->take($limit)->get() ?? null;
+
+                return response()->json([
+                    'success' => true,
+                    'data' => $data,
+
+                ], 200);
+
+
+            }
+
+
+            if ($startofday != null && $endofday == null) {
+
+                $data = PosLog::latest()->whereDate('createdAt', $startofday)->where('bank_id', Auth::user()->bank_id)->take($limit)->get() ?? null;
+
+                return response()->json([
+                    'success' => true,
+                    'data' => $data,
+
+                ], 200);
+
+
+            }
+
+            if ($startofday == null && $endofday != null) {
+
+                $data = PosLog::latest()->wheredate('createdAt', $endofday)->where('bank_id', Auth::user()->bank_id)->take($limit)->get() ?? null;
+
+                return response()->json([
+                    'success' => true,
+                    'data' => $data,
+
+                ], 200);
+
+
+            }
+
+
+
+
+            if ($rrn != null && $startofday != null && $endofday != null) {
+
+                $data = PosLog::whereBetween('createdAt', [$startofday . ' 00:00:00', $endofday . ' 23:59:59'])
+                    ->where([
+                        'RRN' => $rrn,
+                         'bank_id' => Auth::user()->bank_id
+                    ])->take($limit)->get() ?? null;
+
+
+                if ($data->isEmpty()) {
+
+                    return response()->json([
+                        'success' => true,
+                        'data' => [],
+                    ], 200);
+
+
+                }
+
+                return response()->json([
+                    'success' => false,
+                    'transaction' => "No data Found",
+
+                ], 200);
+
+
+            }
+
+        }
+
 
 
         return response()->json([
@@ -159,7 +307,5 @@ class TransactionController extends Controller
 
 
     }
-
-
 
 }

@@ -52,7 +52,12 @@ Route::group(['prefix' => 'admin'], function () {
 
 
         //Transaction
-        Route::post('get-all-transactions', [TransactionController::class, 'get_all_transactions']);
+        Route::get('get-transactions/{limit}', [TransactionController::class, 'get_all_transactions']);
+        Route::get('get-transactions-filter/{limit}', [TransactionController::class, 'get_transactions_by_filter']);
+
+
+
+
         Route::post('transaction-filter', [TransactionController::class, 'get_all_transaction_by_filter']);
 
 
