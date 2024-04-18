@@ -392,6 +392,8 @@ class PosTrasnactionController extends Controller
         $created_at = date('Y-m-d H:i:s', $one_hour_later);
 
         $user_id = Terminal::where('serialNumber', $SerialNo)->first()->user_id ?? null;
+        $bank_id = Terminal::where('serialNumber', $SerialNo)->first()->bank_id ?? null;
+
 
         $trasnaction = new PosLog();
         $trasnaction->RRN = $RRN;
@@ -425,6 +427,8 @@ class PosTrasnactionController extends Controller
         $trasnaction->createdAt= $created_at;
         $trasnaction->updatedAt= $created_at;
         $trasnaction->user_id= $user_id;
+        $trasnaction->bank_id= $bank_id;
+
         $trasnaction->save();
 
 
@@ -464,6 +468,8 @@ class PosTrasnactionController extends Controller
 //                'createdAt' => $created_at,
 //                'updatedAt' => $created_at,
 //                'user_id' => $user_id,
+//                 'bank__id' => $bank_id,
+
 //            );
 //
 //            $post_data = json_encode($data);
@@ -562,6 +568,8 @@ class PosTrasnactionController extends Controller
         ]) ?? null;
 
         $user_id = Terminal::where('serialNumber', $SerialNo)->first()->user_id ?? null;
+        $bank_id = Terminal::where('serialNumber', $SerialNo)->first()->bank_id ?? null;
+
 
         // Get the current time
         $current_time = time();
@@ -601,6 +609,7 @@ class PosTrasnactionController extends Controller
         $trasnaction->createdAt= $created_at;
         $trasnaction->updatedAt= $created_at;
         $trasnaction->user_id= $user_id;
+        $trasnaction->bank_id= $bank_id;
         $trasnaction->save();
 
 
@@ -640,6 +649,8 @@ class PosTrasnactionController extends Controller
 //                'createdAt' => $created_at,
 //                'updatedAt' => $created_at,
 //                'user_id' => $user_id,
+//                'bank_id' => $bank_id,
+
 //            );
 //
 //            $post_data = json_encode($data);

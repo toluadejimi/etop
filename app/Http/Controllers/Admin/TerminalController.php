@@ -25,6 +25,15 @@ class TerminalController extends Controller
         }
 
 
+        if ($request->bank_id == null) {
+            return response()->json([
+                'status' => false,
+                'message' => "Bank Details can not be null"
+            ], 422);
+
+        }
+
+
         if (Auth::user()->role == 1 || Auth::user()->role == 2) {
 
 
@@ -34,6 +43,7 @@ class TerminalController extends Controller
                 $term = new Terminal();
                 $term->tid = $request->tid;
                 $term->user_id = $request->user_id;
+                $term->bank_id = $request->bank_id;
                 $term->ip = $request->ip;
                 $term->port = $request->port;
                 $term->ssl = $request->ssl;
@@ -56,6 +66,7 @@ class TerminalController extends Controller
 
                         'tid' => $request->tid,
                         'user_id' => $request->user_id,
+                        'bank_id' => $request->bank_id,
                         'ip' => $request->ip,
                         'port' => $request->port,
                         'ssl' => $request->ssl,
@@ -141,7 +152,7 @@ class TerminalController extends Controller
             $ter = Terminal::where('serialNumber', $request->serialNumber)->first() ?? null;
             if ($ter != null) {
 
-                Terminal::where('serialNumber', $request->serialNumber)->update(['user_id' => $request->user_id]);
+                Terminal::where('serialNumber', $request->serialNumber)->update(['user_id' => $request->user_id, 'bank_id' => $request->bank_id]);
 
                 try {
 
@@ -149,6 +160,7 @@ class TerminalController extends Controller
                     $data = array(
                         'user_id' => $request->user_id,
                         'serialNumber' => $request->serialNumber,
+                        'bank_id' => $request->bank_id,
                     );
                     $post_data = json_encode($data);
 
@@ -177,7 +189,7 @@ class TerminalController extends Controller
 
                 return response()->json([
                     'status' => true,
-                    'message' => "User has been successfully attached"
+                    'message' => "Terminal has been successfully updated"
                 ], 200);
 
             } else {
@@ -200,25 +212,77 @@ class TerminalController extends Controller
     }
 
 
-    public
-    function view_all_terminal(request $request)
+    public function view_all_terminal(request $request)
     {
 
 
-        $ter = Terminal::all() ?? null;
-        if ($ter == null) {
-            $message = "No Terminal Found";
-            return error_response($message);
+
+        if (Auth::user()->role == 1 || Auth::user()->role == 2 ) {
+
+            $ter = Terminal::all() ?? null;
+            if ($ter == null) {
+                return response()->json([
+                    'status' => false,
+                    'message' => "No Terminal Found"
+                ], 422);
+
+            }
+
+
+            return response()->json([
+                'status' => true,
+                'data' => $ter
+            ], 200);
+
+        }
+
+        if (Auth::user()->role == 3 ) {
+
+
+            $ter = Terminal::where('bank_id', Auth::user()->bank_id)->get() ?? null;
+
+            if ($ter == null) {
+                return response()->json([
+                    'status' => false,
+                    'message' => "No Terminal Found"
+                ], 422);
+
+            }
+
+            return response()->json([
+                'status' => true,
+                'data' => $ter
+            ], 200);
+
+
+        }
+
+        if (Auth::user()->role == 4 ) {
+
+            $ter = Terminal::where('user_id', Auth::id())->get() ?? null;
+            if ($ter == null) {
+                return response()->json([
+                    'status' => false,
+                    'message' => "No Terminal Found"
+                ], 422);
+
+            }
+
+            return response()->json([
+                'status' => true,
+                'data' => $ter
+            ], 200);
+
 
         }
 
 
+
+
         return response()->json([
-            'status' => true,
-            'terminal' => null,
-            'terminals' => $ter,
-            'error' => null
-        ], 200);
+            'status' => false,
+            'message' => "No Terminal Found"
+        ], 422);
 
 
     }

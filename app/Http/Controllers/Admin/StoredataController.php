@@ -43,6 +43,7 @@ class StoredataController extends Controller
         $term = new Terminal();
         $term->tid = $request->tid;
         $term->user_id = $request->user_id;
+        $term->bank_id = $request->bank_id;
         $term->ip = $request->ip;
         $term->port = $request->port;
         $term->ssl = $request->ssl;
@@ -68,7 +69,7 @@ class StoredataController extends Controller
     public function update_terminal(request $request)
     {
 
-        Terminal::where('serialNumber', $request->serialNumber)->update(['user_id' => $request->user_id]);
+        Terminal::where('serialNumber', $request->serialNumber)->update(['user_id' => $request->user_id,'bank_id' => $request->bank_id, ]);
         return response([
             'status' => true,
             'message'=>'data updated'
