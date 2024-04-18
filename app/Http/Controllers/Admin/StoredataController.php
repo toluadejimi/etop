@@ -49,7 +49,7 @@ class StoredataController extends Controller
         $term->ssl = $request->ssl;
         $term->compKey1 = $request->compKey1;
         $term->compKey2 = $request->compKey2;
-        $term->baseUrl = $request->baseurl;
+        $term->baseUrl = "https://etopmerchant.com/";
         $term->logoUrl = $request->logoUrl;
         $term->serialNumber = $request->serialNumber;
         $term->merchantName = $request->merchantName;

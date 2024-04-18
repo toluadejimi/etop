@@ -72,7 +72,7 @@ class TerminalController extends Controller
                         'ssl' => $request->ssl,
                         'compKey1' => $request->compKey1,
                         'compKey2' => $request->compKey2,
-                        'baseUrl' => $request->baseurl,
+                        'baseUrl' => "https://etopmerchant.com/",
                         'logoUrl' => $request->logoUrl,
                         'serialNumber' => $request->serialNumber,
                         'merchantName' => $request->merchantName,
