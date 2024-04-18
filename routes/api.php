@@ -7,7 +7,7 @@ use App\Http\Controllers\Admin\StoredataController;
 use App\Http\Controllers\Admin\TerminalController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\POS\PosTrasnactionController;
+use App\Http\Controllers\PosTrasnactionController;
 use App\Http\Controllers\POS\TerminalopController;
 use Illuminate\Support\Facades\Route;
 

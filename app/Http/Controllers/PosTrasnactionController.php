@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Controllers\POS;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\PosLog;
 use App\Models\SuperAgent;
 use App\Models\Terminal;
