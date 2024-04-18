@@ -11,7 +11,7 @@ return array(
     'App\\Http\\Controllers\\Admin\\AdminController' => $baseDir . '/app/Http/Controllers/Admin/AdminController.php',
     'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
     'App\\Http\\Controllers\\POS\\PosTrasnactionController' => $baseDir . '/app/Http/Controllers/PosTrasnactionController.php',
-    'App\\Http\\Controllers\\POS\\TerminalopController' => $baseDir . '/app/Http/Controllers/TerminalopController.php',
+    'App\\Http\\Controllers\\TerminalopController' => $baseDir . '/app/Http/Controllers/TerminalopController.php',
     'App\\Http\\Kernel' => $baseDir . '/app/Http/Kernel.php',
     'App\\Http\\Middleware\\Authenticate' => $baseDir . '/app/Http/Middleware/Authenticate.php',
     'App\\Http\\Middleware\\EncryptCookies' => $baseDir . '/app/Http/Middleware/EncryptCookies.php',

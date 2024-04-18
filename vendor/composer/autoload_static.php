@@ -605,7 +605,7 @@ class ComposerStaticInit9c491b8531eec05ba41a11d9276a5749
         'App\\Http\\Controllers\\Admin\\AdminController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/AdminController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\POS\\PosTrasnactionController' => __DIR__ . '/../..' . '/app/Http/Controllers/PosTrasnactionController.php',
-        'App\\Http\\Controllers\\POS\\TerminalopController' => __DIR__ . '/../..' . '/app/Http/Controllers/TerminalopController.php',
+        'App\\Http\\Controllers\\TerminalopController' => __DIR__ . '/../..' . '/app/Http/Controllers/TerminalopController.php',
         'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
         'App\\Http\\Middleware\\Authenticate' => __DIR__ . '/../..' . '/app/Http/Middleware/Authenticate.php',
         'App\\Http\\Middleware\\EncryptCookies' => __DIR__ . '/../..' . '/app/Http/Middleware/EncryptCookies.php',

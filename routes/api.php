@@ -8,7 +8,7 @@ use App\Http\Controllers\Admin\TerminalController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\PosTrasnactionController;
-use App\Http\Controllers\POS\TerminalopController;
+use App\Http\Controllers\TerminalopController;
 use Illuminate\Support\Facades\Route;
 
 
