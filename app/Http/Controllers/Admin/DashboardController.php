@@ -54,7 +54,7 @@ class DashboardController extends Controller
                 ->where(['status'  => 0, 'bank_id' => $bank_id])->sum('amount');
 
             $data['all_terminals'] = Terminal::where('bank_id', $bank_id)->count();
-            $data['all_transactions'] = PosLog::latest()->where('bank_id', $bank_id)->get->take(100)->get();
+            $data['all_transactions'] = PosLog::latest()->where('bank_id', $bank_id)->take(100)->get();
 
 
             return response()->json([
