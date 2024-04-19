@@ -22,7 +22,7 @@ class UserController extends Controller
             ], 422);
         }
 
-        if (Auth::user()->status == 1) {
+        if (Auth::user()->status != 1) {
             return response()->json([
                 'status' => false,
                 'message' => "You dont have permission to create a user"
