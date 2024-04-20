@@ -35,6 +35,8 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('create-bank', [BankController::class, 'create_bank']);
         Route::post('update-bank', [BankController::class, 'update_bank']);
         Route::post('delete-bank', [BankController::class, 'delete_bank']);
+        Route::post('search-bank', [BankController::class, 'search_bank']);
+
 
 
         //Dashboard
@@ -48,6 +50,8 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('list-customer-users', [UserController::class, 'get_customer_users']);
         Route::get('list-bank-users', [UserController::class, 'get_bank_users']);
         Route::get('delete-users', [UserController::class, 'delete_user']);
+        Route::post('search-users', [UserController::class, 'search_user']);
+
 
 
 
@@ -66,6 +70,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('update-terminal', [TerminalController::class, 'update_terminal']);
         Route::get('view-terminal', [TerminalController::class, 'view_all_terminal']);
         Route::get('delete-terminal', [TerminalController::class, 'delete_terminal']);
+        Route::post('search-terminal', [TerminalController::class, 'search_terminal']);
 
 
 

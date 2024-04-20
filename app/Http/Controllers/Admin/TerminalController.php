@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Terminal;
+use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -286,6 +287,34 @@ class TerminalController extends Controller
 
 
     }
+
+
+    public function search_terminal(request $request)
+    {
+
+        if (Auth::user()->role == 1 || Auth::user()->role == 2) {
+
+            $keyword = $request->keyword;
+            $results = Terminal::where('serialNumber', 'LIKE', "%$keyword%")->get();
+
+            return response()->json([
+
+                'status' => true,
+                'data' => $results
+
+            ], 200);
+
+
+
+        } else {
+
+            return response()->json([
+                'status' => false,
+                'message' => "You dont have permission to create a terminal"
+            ], 422);
+        }
+    }
+
 
 
 

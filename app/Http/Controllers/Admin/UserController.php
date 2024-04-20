@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Book;
 use App\Models\PosLog;
 use App\Models\User;
 use Illuminate\Database\QueryException;
@@ -319,6 +320,34 @@ class UserController extends Controller
 
 
     }
+
+
+    public function search_user(request $request)
+    {
+
+        if (Auth::user()->role == 1 || Auth::user()->role == 2) {
+
+            $keyword = $request->keyword;
+            $results = User::where('first_name', 'LIKE', "%$keyword%")->get();
+
+            return response()->json([
+
+                'status' => true,
+                'data' => $results
+
+            ], 200);
+
+
+
+        } else {
+
+            return response()->json([
+                'status' => false,
+                'message' => "You dont have permission to create a terminal"
+            ], 422);
+        }
+    }
+
 
 
 
