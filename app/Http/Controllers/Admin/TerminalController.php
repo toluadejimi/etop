@@ -56,7 +56,7 @@ class TerminalController extends Controller
                 $term->merchantName = $request->merchantName;
                 $term->mid = $request->mid;
                 $term->merchantaddress = $request->merchantaddress;
-                $term->pin = Hash::make($request->pin);
+                $term->pin = bcrypt($request->pin);
                 $term->save();
 
 
@@ -73,13 +73,13 @@ class TerminalController extends Controller
                         'ssl' => $request->ssl,
                         'compKey1' => $request->compKey1,
                         'compKey2' => $request->compKey2,
-                        'baseUrl' => "https://etopmerchant.com/",
+                        'baseUrl' => "http://etopagency.com:9001/",
                         'logoUrl' => $request->logoUrl,
                         'serialNumber' => $request->serialNumber,
                         'merchantName' => $request->merchantName,
                         'mid' => $request->mid,
                         'merchantaddress' => $request->merchantaddress,
-                        'pin' => Hash::make($request->pin),
+                        'pin' => bcrypt($request->pin),
 
                     );
                     $post_data = json_encode($data);
@@ -220,7 +220,7 @@ class TerminalController extends Controller
 
         if (Auth::user()->role == 1 || Auth::user()->role == 2 ) {
 
-            $ter = Terminal::all() ?? null;
+            $ter = Terminal::latest()->paginate(10) ?? null;
             if ($ter == null) {
                 return response()->json([
                     'status' => false,
@@ -240,7 +240,7 @@ class TerminalController extends Controller
         if (Auth::user()->role == 3 ) {
 
 
-            $ter = Terminal::where('bank_id', Auth::user()->bank_id)->get() ?? null;
+            $ter = Terminal::latest()->where('bank_id', Auth::user()->bank_id)->paginate('10') ?? null;
 
             if ($ter == null) {
                 return response()->json([
@@ -260,7 +260,7 @@ class TerminalController extends Controller
 
         if (Auth::user()->role == 4 ) {
 
-            $ter = Terminal::where('user_id', Auth::id())->get() ?? null;
+            $ter = Terminal::latest()->where('user_id', Auth::id())->paginate(10) ?? null;
             if ($ter == null) {
                 return response()->json([
                     'status' => false,

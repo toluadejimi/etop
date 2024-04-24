@@ -49,13 +49,13 @@ class StoredataController extends Controller
         $term->ssl = $request->ssl;
         $term->compKey1 = $request->compKey1;
         $term->compKey2 = $request->compKey2;
-        $term->baseUrl = "https://etopmerchant.com/";
+        $term->baseUrl = "http://etopagency.com:9001/";
         $term->logoUrl = $request->logoUrl;
         $term->serialNumber = $request->serialNumber;
         $term->merchantName = $request->merchantName;
         $term->mid = $request->mid;
         $term->merchantaddress = $request->merchantaddress;
-        $term->pin = Hash::make($request->pin);
+        $term->pin = $request->pin;
         $term->save();
 
         return response([
