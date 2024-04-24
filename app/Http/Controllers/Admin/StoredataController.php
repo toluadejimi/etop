@@ -101,6 +101,11 @@ class StoredataController extends Controller
     public function store_transaction(request $request)
     {
 
+        $current_time = time();
+        $one_hour_later = $current_time + 3600; // 3600 seconds = 1 hour
+        $created_at = date('Y-m-d H:i:s', $one_hour_later);
+
+
         $trasnaction = new PosLog();
         $trasnaction->RRN = $request->RRN;
         $trasnaction->STAN = $request->STAN;
@@ -130,8 +135,8 @@ class StoredataController extends Controller
         $trasnaction->transactionType = $request->transactionType;
         $trasnaction->cardName = $request->cardName;
         $trasnaction->SerialNo = $request->SerialNo;
-        $trasnaction->createdAt= $request->created_at;
-        $trasnaction->updatedAt= $request->created_at;
+        $trasnaction->createdAt= $created_at;
+        $trasnaction->updatedAt= $created_at;
         $trasnaction->user_id= $request->user_id;
         $trasnaction->save();
 
