@@ -388,7 +388,7 @@ class PosTrasnactionController extends Controller
         // Get the current time
         $current_time = time();
         $one_hour_later = $current_time + 3600; // 3600 seconds = 1 hour
-        $created_at = date('Y-m-d H:i:s', $one_hour_later);
+        $created_at = date('Y-m-d H:i:s'); //date('Y-m-d H:i:s', $one_hour_later);
 
         $user_id = Terminal::where('serialNumber', $SerialNo)->first()->user_id ?? null;
         $bank_id = Terminal::where('serialNumber', $SerialNo)->first()->bank_id ?? null;
@@ -431,69 +431,69 @@ class PosTrasnactionController extends Controller
         $trasnaction->save();
 
 
-//        try {
-//
-//            $curl = curl_init();
-//            $data = array(
-//
-//                'RRN' => $RRN,
-//                'STAN' => $STAN,
-//                'accountBalance' => $Balance ?? $accountBalance,
-//                'acquiringInstitutionIdCode' => $acquiringInstitutionIdCode,
-//                'authCode' => $authCode,
-//                'cardCardSequenceNum' => $cardCardSequenceNum,
-//                'cardExpireData' => $cardExpireData,
-//                'forwardingInstCode' => $forwardingInstCode,
-//                'merchantNo' => $merchantNo,
-//                'amount' => $amount,
-//                'accountType' => $accountType,
-//                'tid' => $tid,
-//                'merchantName' => $merchantName,
-//                'pan' => $pan,
-//                'pinBlock' => $pinBlock,
-//                'receiptNumber' => $receiptNumber,
-//                'respCode' => $respCode,
-//                'responseMessage' => $responseMessage,
-//                'status' => $status,
-//                'successResponse' => $successResponse,
-//                'systemTraceAuditNo' => $systemTraceAuditNo,
-//                'terminalId' => $terminalId,
-//                'transactionDate' => $transactionDate,
-//                'transactionDateTime' => $transactionDateTime,
-//                'transactionTime' => $transactionTime,
-//                'transactionType' => $transactionType,
-//                'cardName' => $cardName,
-//                'SerialNo' => $SerialNo,
-//                'createdAt' => $created_at,
-//                'updatedAt' => $created_at,
-//                'user_id' => $user_id,
-//                 'bank__id' => $bank_id,
+        try {
 
-//            );
-//
-//            $post_data = json_encode($data);
-//            curl_setopt_array($curl, array(
-//                CURLOPT_URL => 'https://etopmerchant.com/api/store-transaction',
-//                CURLOPT_RETURNTRANSFER => true,
-//                CURLOPT_ENCODING => '',
-//                CURLOPT_MAXREDIRS => 10,
-//                CURLOPT_TIMEOUT => 0,
-//                CURLOPT_FOLLOWLOCATION => true,
-//                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-//                CURLOPT_CUSTOMREQUEST => 'POST',
-//                CURLOPT_POSTFIELDS => $post_data,
-//                CURLOPT_HTTPHEADER => array(
-//                    'Content-Type: application/json'
-//                ),
-//            ));
-//
-//            $var = curl_exec($curl);
-//            curl_close($curl);
-//
-//
-//        } catch (QueryException $e) {
-//            echo "$e";
-//        }
+            $curl = curl_init();
+            $data = array(
+
+                'RRN' => $RRN,
+                'STAN' => $STAN,
+                'accountBalance' => $Balance ?? $accountBalance,
+                'acquiringInstitutionIdCode' => $acquiringInstitutionIdCode,
+                'authCode' => $authCode,
+                'cardCardSequenceNum' => $cardCardSequenceNum,
+                'cardExpireData' => $cardExpireData,
+                'forwardingInstCode' => $forwardingInstCode,
+                'merchantNo' => $merchantNo,
+                'amount' => $amount,
+                'accountType' => $accountType,
+                'tid' => $tid,
+                'merchantName' => $merchantName,
+                'pan' => $pan,
+                'pinBlock' => $pinBlock,
+                'receiptNumber' => $receiptNumber,
+                'respCode' => $respCode,
+                'responseMessage' => $responseMessage,
+                'status' => $status,
+                'successResponse' => $successResponse,
+                'systemTraceAuditNo' => $systemTraceAuditNo,
+                'terminalId' => $terminalId,
+                'transactionDate' => $transactionDate,
+                'transactionDateTime' => $transactionDateTime,
+                'transactionTime' => $transactionTime,
+                'transactionType' => $transactionType,
+                'cardName' => $cardName,
+                'SerialNo' => $SerialNo,
+                'createdAt' => $created_at,
+                'updatedAt' => $created_at,
+                'user_id' => $user_id,
+                'bank__id' => $bank_id,
+
+            );
+
+            $post_data = json_encode($data);
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => 'https://etopmerchant.com/api/store-transaction',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => $post_data,
+                CURLOPT_HTTPHEADER => array(
+                    'Content-Type: application/json'
+                ),
+            ));
+
+            $var = curl_exec($curl);
+            curl_close($curl);
+
+
+        } catch (QueryException $e) {
+            echo "$e";
+        }
 
 
         $mer = Terminal::where('serialNumber', $SerialNo)->first() ?? null;
