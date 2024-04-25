@@ -46,8 +46,15 @@ if (!function_exists('uptoken')) {
         $var = curl_exec($curl);
         curl_close($curl);
         $var = json_decode($var);
+        $status = $var->status ?? null;
 
-        dd($var);
+        $token = $var->data->accessToken;
+
+        if($status == true){
+            return $token;
+        }
+
+
 
 
     }

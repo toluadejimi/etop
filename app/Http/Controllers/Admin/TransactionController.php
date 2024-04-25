@@ -240,7 +240,7 @@ class TransactionController extends Controller
 
             }
 
-            $get_all_transaction = PosLog::latest()->take($limit)->paginate(10);
+            $get_all_transaction = PosLog::latest()->take($limit)->paginate(50);
             return response()->json([
                 'status' => true,
                 'data' => $get_all_transaction
@@ -258,7 +258,7 @@ class TransactionController extends Controller
                 ], 422);
 
             }
-            $get_all_transaction = PosLog::latest()->where('bank_id',Auth::user()->bank_id )->take($limit)->paginate(10);
+            $get_all_transaction = PosLog::latest()->where('bank_id',Auth::user()->bank_id )->take($limit)->paginate(50);
             return response()->json([
                 'status' => true,
                 'data' => $get_all_transaction
@@ -276,7 +276,7 @@ class TransactionController extends Controller
                 ], 422);
 
             }
-            $get_all_transaction = PosLog::latest()->where('user_id',Auth::id() )->take($limit)->paginate(10);
+            $get_all_transaction = PosLog::latest()->where('user_id',Auth::id() )->take($limit)->paginate(50);
             return response()->json([
                 'status' => true,
                 'data' => $get_all_transaction
@@ -326,7 +326,7 @@ class TransactionController extends Controller
             if ($startofday != null && $endofday != null) {
 
                 $data = PosLog::latest()->whereBetween('createdAt', [$startofday . ' 00:00:00', $endofday . ' 23:59:59'])
-                    ->take($limit1)->paginate(10) ?? null;
+                    ->take($limit1)->paginate(50) ?? null;
 
                 return response()->json([
                     'success' => true,
@@ -339,7 +339,7 @@ class TransactionController extends Controller
 
             if ($startofday == null && $endofday == null && $rrn != null) {
 
-                $data = PosLog::where('RRN', $rrn)->take($limit)->paginate(10) ?? null;
+                $data = PosLog::where('RRN', $rrn)->take($limit)->paginate(50) ?? null;
 
                 return response()->json([
                     'success' => true,
@@ -353,7 +353,7 @@ class TransactionController extends Controller
 
             if ($startofday != null && $endofday == null) {
 
-                $data = PosLog::latest()->whereDate('createdAt', $startofday)->take($limit)->paginate(10) ?? null;
+                $data = PosLog::latest()->whereDate('createdAt', $startofday)->take($limit)->paginate(50) ?? null;
 
                 return response()->json([
                     'success' => true,
@@ -366,7 +366,7 @@ class TransactionController extends Controller
 
             if ($startofday == null && $endofday != null) {
 
-                $data = PosLog::latest()->wheredate('createdAt', $endofday)->take($limit)->paginate(10) ?? null;
+                $data = PosLog::latest()->wheredate('createdAt', $endofday)->take($limit)->paginate(50) ?? null;
 
                 return response()->json([
                     'success' => true,
@@ -385,7 +385,7 @@ class TransactionController extends Controller
                 $data = PosLog::whereBetween('createdAt', [$startofday . ' 00:00:00', $endofday . ' 23:59:59'])
                     ->where([
                         'RRN' => $rrn,
-                    ])->take($limit)->paginate(10) ?? null;
+                    ])->take($limit)->paginate(50) ?? null;
 
 
                 if ($data->isEmpty()) {
@@ -429,7 +429,7 @@ class TransactionController extends Controller
             if ($startofday != null && $endofday != null) {
 
                 $data = PosLog::latest()->whereBetween('createdAt', [$startofday . ' 00:00:00', $endofday . ' 23:59:59'])
-                    ->take($limit1)->where('bank_id', Auth::user()->bank_id)->paginate(10) ?? null;
+                    ->take($limit1)->where('bank_id', Auth::user()->bank_id)->paginate(50) ?? null;
 
                 return response()->json([
                     'success' => true,
@@ -442,7 +442,7 @@ class TransactionController extends Controller
 
             if ($startofday == null && $endofday == null && $rrn != null) {
 
-                $data = PosLog::where('RRN', $rrn)->where('bank_id', Auth::user()->bank_id)->take($limit)->paginate(10) ?? null;
+                $data = PosLog::where('RRN', $rrn)->where('bank_id', Auth::user()->bank_id)->take($limit)->paginate(50) ?? null;
 
                 return response()->json([
                     'success' => true,
@@ -456,7 +456,7 @@ class TransactionController extends Controller
 
             if ($startofday != null && $endofday == null) {
 
-                $data = PosLog::latest()->whereDate('createdAt', $startofday)->where('bank_id', Auth::user()->bank_id)->take($limit)->paginate(10) ?? null;
+                $data = PosLog::latest()->whereDate('createdAt', $startofday)->where('bank_id', Auth::user()->bank_id)->take($limit)->paginate(50) ?? null;
 
                 return response()->json([
                     'success' => true,
@@ -469,7 +469,7 @@ class TransactionController extends Controller
 
             if ($startofday == null && $endofday != null) {
 
-                $data = PosLog::latest()->wheredate('createdAt', $endofday)->where('bank_id', Auth::user()->bank_id)->take($limit)->paginate(10) ?? null;
+                $data = PosLog::latest()->wheredate('createdAt', $endofday)->where('bank_id', Auth::user()->bank_id)->take($limit)->paginate(50) ?? null;
 
                 return response()->json([
                     'success' => true,
@@ -489,7 +489,7 @@ class TransactionController extends Controller
                     ->where([
                         'RRN' => $rrn,
                          'bank_id' => Auth::user()->bank_id
-                    ])->take($limit)->paginate(10) ?? null;
+                    ])->take($limit)->paginate(50) ?? null;
 
 
                 if ($data->isEmpty()) {
