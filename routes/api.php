@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\StoredataController;
 use App\Http\Controllers\Admin\TerminalController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\PayByTransferController;
 use App\Http\Controllers\PosTrasnactionController;
 use App\Http\Controllers\TerminalopController;
 use Illuminate\Support\Facades\Route;
@@ -93,6 +94,17 @@ Route::group(['prefix' => 'v1'], function () {
     Route::post('verify-pin', [TerminalopController::class, 'verify_pin']);
     Route::any('get-all-logged-data', [PosTrasnactionController::class, 'get_all_by_serial_logged_data']);
     Route::any('get-all-transactions', [PosTrasnactionController::class, 'get_all_transaction']);
+
+
+
+    //UP TRNANSFER
+
+    Route::any('notification', [PayByTransferController::class, 'webhook_notification']);
+    Route::post('register-merchant', [PayByTransferController::class, 'register_merchant']);
+
+
+
+
 
 
     Route::any('get-all-logged-data/get-all-transactions', [PosTrasnactionController::class, 'get_all_transaction_by_filter']);
