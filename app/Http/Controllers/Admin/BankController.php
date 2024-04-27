@@ -139,8 +139,9 @@ class BankController extends Controller
         } else {
 
             return response()->json(['status' => true,
-                'message' => "You don't have permission"],
-                422);
+                'message' => "You don't have permission"
+
+            ], 422);
 
         }
     }
