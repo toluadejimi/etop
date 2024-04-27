@@ -15,10 +15,22 @@ class BankController extends Controller
     {
         if (Auth::user()->role == 1 || Auth::user()->role == 2) {
 
+
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                $fileName = $file->getClientOriginalName();
+                $destinationPath = public_path() . 'upload/image';
+                $request->photo->move(public_path('upload/image'), $fileName);
+                $file_url = url('') . "/public/upload/image/$fileName";
+
+            }
+
             $bank = new Bank();
             $bank->name = $request->name;
             $bank->email = $request->email;
+            $bank->image = $file_url;
             $bank->save();
+
 
             $usr = new User();
             $usr->first_name = $request->name;
@@ -37,6 +49,7 @@ class BankController extends Controller
                 $data = array(
                     'email' => $request->email,
                     'name' => $request->name,
+                    'image' => $file_url
 
                 );
                 $post_data = json_encode($data);
@@ -85,9 +98,21 @@ class BankController extends Controller
     {
         if (Auth::user()->role == 1 || Auth::user()->role == 2) {
 
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                $fileName = $file->getClientOriginalName();
+                $destinationPath = public_path() . 'upload/image';
+                $request->photo->move(public_path('upload/image'), $fileName);
+                $file_url = url('') . "/public/upload/image/$fileName";
+
+            }
+
             Bank::where('id', $request->id)->update([
+
                 'name' => $request->name,
                 'email' => $request->email,
+                'image' => $file_url,
+
             ]);
 
 
@@ -97,6 +122,7 @@ class BankController extends Controller
                 $data = array(
                     'email' => $request->email,
                     'name' => $request->name,
+                    'image' => $file_url,
 
 
                 );

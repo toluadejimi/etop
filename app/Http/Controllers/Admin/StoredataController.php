@@ -154,6 +154,8 @@ class StoredataController extends Controller
         $bank = new Bank();
         $bank->name = $request->name;
         $bank->email = $request->email;
+        $bank->image = $request->image;
+
         $bank->save();
 
         $usr = new User();
@@ -178,7 +180,7 @@ class StoredataController extends Controller
         Bank::where('id', $request->id)->update([
             'name' => $request->name,
             'email' => $request->email,
-
+            'image' => $request->image,
         ]);
 
         return response([
