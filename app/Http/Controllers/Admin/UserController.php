@@ -112,7 +112,7 @@ class UserController extends Controller
     {
 
         if (Auth::user()->role == 1 || Auth::user()->role == 2) {
-            $users = User::all();
+            $users = User::latest()->paginate(50);
             return response()->json([
                 'status' => true,
                 'data' => $users
@@ -132,7 +132,7 @@ class UserController extends Controller
     {
 
         if (Auth::user()->role == 1 || Auth::user()->role == 2) {
-            $users = User::where('role', 4)->get();
+            $users = User::latest()->where('role', 4)->paginate(50);
             return response()->json([
                 'status' => true,
                 'data' => $users
@@ -152,7 +152,7 @@ class UserController extends Controller
     {
 
         if (Auth::user()->role == 1 || Auth::user()->role == 2) {
-            $users = User::where('role', 3)->get();
+            $users = User::where('role', 3)->latest()->paginate(50);
             return response()->json([
                 'status' => true,
                 'data' => $users
