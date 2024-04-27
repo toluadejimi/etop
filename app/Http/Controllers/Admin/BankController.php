@@ -20,7 +20,7 @@ class BankController extends Controller
                 $file = $request->file('image');
                 $fileName = $file->getClientOriginalName();
                 $destinationPath = public_path() . 'upload/image';
-                $request->photo->move(public_path('upload/image'), $fileName);
+                $request->image->move(public_path('upload/image'), $fileName);
                 $file_url = url('') . "/public/upload/image/$fileName";
 
                 $bank = new Bank();
@@ -155,7 +155,7 @@ class BankController extends Controller
                 $file = $request->file('image');
                 $fileName = $file->getClientOriginalName();
                 $destinationPath = public_path() . 'upload/image';
-                $request->photo->move(public_path('upload/image'), $fileName);
+                $request->image->move(public_path('upload/image'), $fileName);
                 $file_url = url('') . "/public/upload/image/$fileName";
 
                 Bank::where('id', $request->id)->update([
