@@ -29,7 +29,6 @@ class BankController extends Controller
                 $bank->image = $file_url;
                 $bank->save();
 
-
                 $usr = new User();
                 $usr->first_name = $request->name;
                 $usr->last_name = $request->name;
@@ -38,7 +37,6 @@ class BankController extends Controller
                 $usr->bank_id = $bank->id;
                 $usr->password = bcrypt('123456');
                 $usr->save();
-
 
                 try {
 
@@ -79,12 +77,6 @@ class BankController extends Controller
                     'data' => $bank,
                     'message' => "Bank Created Successfully "
                 ], 200);
-
-            } else {
-                return response()->json([
-                    'status' => true,
-                    'message' => "You don't have permission"
-                ], 422);
 
             }
 
@@ -147,7 +139,8 @@ class BankController extends Controller
         } else {
 
             return response()->json(['status' => true,
-                'message' => "You don't have permission"], 422);
+                'message' => "You don't have permission"],
+                422);
 
         }
     }
