@@ -147,127 +147,6 @@ class BankController extends Controller
     }
 
 
-    public function update_bank(request $request)
-    {
-        if (Auth::user()->role == 1 || Auth::user()->role == 2) {
-
-            if ($request->hasFile('image')) {
-                $file = $request->file('image');
-                $fileName = $file->getClientOriginalName();
-                $destinationPath = public_path() . 'upload/image';
-                $request->image->move(public_path('upload/image'), $fileName);
-                $file_url = url('') . "/public/upload/image/$fileName";
-
-                Bank::where('id', $request->id)->update([
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'image' => $file_url,
-                ]);
-
-
-                try {
-
-                    $curl = curl_init();
-                    $data = array(
-                        'email' => $request->email,
-                        'name' => $request->name,
-                        'image' => $file_url,
-
-
-                    );
-                    $post_data = json_encode($data);
-
-                    curl_setopt_array($curl, array(
-                        CURLOPT_URL => 'https://etopmerchant.com/api/update-bank',
-                        CURLOPT_RETURNTRANSFER => true,
-                        CURLOPT_ENCODING => '',
-                        CURLOPT_MAXREDIRS => 10,
-                        CURLOPT_TIMEOUT => 0,
-                        CURLOPT_FOLLOWLOCATION => true,
-                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                        CURLOPT_CUSTOMREQUEST => 'POST',
-                        CURLOPT_POSTFIELDS => $post_data,
-                        CURLOPT_HTTPHEADER => array(
-                            'Content-Type: application/json'
-                        ),
-                    ));
-
-                    $var = curl_exec($curl);
-                    curl_close($curl);
-
-
-                } catch (QueryException $e) {
-                    echo "$e";
-                }
-
-
-                return response()->json([
-                    'status' => true,
-                    'message' => "Bank updated successfully "
-                ], 200);
-
-            }
-
-
-            Bank::where('id', $request->id)->update([
-
-                'name' => $request->name,
-                'email' => $request->email,
-
-            ]);
-
-
-            try {
-
-                $curl = curl_init();
-                $data = array(
-                    'email' => $request->email,
-                    'name' => $request->name,
-
-
-                );
-                $post_data = json_encode($data);
-
-                curl_setopt_array($curl, array(
-                    CURLOPT_URL => 'https://etopmerchant.com/api/update-bank',
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => '',
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 0,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => 'POST',
-                    CURLOPT_POSTFIELDS => $post_data,
-                    CURLOPT_HTTPHEADER => array(
-                        'Content-Type: application/json'
-                    ),
-                ));
-
-                $var = curl_exec($curl);
-                curl_close($curl);
-
-
-            } catch (QueryException $e) {
-                echo "$e";
-            }
-
-
-            return response()->json([
-                'status' => true,
-                'message' => "Bank updated successfully "
-            ], 200);
-
-        } else {
-
-            return response()->json([
-                'status' => true,
-                'message' => "You don't have permission"
-            ], 422);
-
-        }
-    }
-
-
     public
     function search_bank(request $request)
     {
@@ -277,6 +156,31 @@ class BankController extends Controller
             $keyword = $request->keyword;
             $results = Bank::where('name', 'LIKE', "%$keyword%")->get();
 
+            return response()->json([
+
+                'status' => true,
+                'data' => $results
+
+            ], 200);
+
+
+        } else {
+
+            return response()->json([
+                'status' => false,
+                'message' => "You dont have permission to create a terminal"
+            ], 422);
+        }
+    }
+
+
+    public
+    function get_all_banks(request $request)
+    {
+
+        if (Auth::user()->role == 1 || Auth::user()->role == 2) {
+
+            $results = Bank::latest()->paginate(50);
             return response()->json([
 
                 'status' => true,

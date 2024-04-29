@@ -37,6 +37,8 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('update-bank', [BankController::class, 'update_bank']);
         Route::post('delete-bank', [BankController::class, 'delete_bank']);
         Route::post('search-bank', [BankController::class, 'search_bank']);
+        Route::get('get-all-banks', [BankController::class, 'get_all_banks']);
+
 
 
 
