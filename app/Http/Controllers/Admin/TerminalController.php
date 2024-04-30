@@ -160,11 +160,11 @@ class TerminalController extends Controller
 
             $csv = array_map('str_getcsv', file($filePath));
             $keys = array_shift($csv);
-
+            $keys = array_diff($keys, ['compKey1', 'compKey2','accountBalance','ip', 'port', 'ssl']);
             $numColumns = count($keys);
             foreach ($csv as $row) {
+                $row = array_diff_key($row, array_flip(['compKey1', 'compKey2', 'accountBalance','ip', 'port', 'ssl']));
                 if (count($row) !== $numColumns) {
-
                     return response()->json([
                         'status' => false,
                         'message' => "CSV file contains rows with different number of columns"
