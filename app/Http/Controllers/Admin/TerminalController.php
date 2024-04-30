@@ -9,6 +9,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class TerminalController extends Controller
 {
@@ -133,6 +134,64 @@ class TerminalController extends Controller
                 'message' => "You dont have permission to create a terminal"
             ], 422);
         }
+    }
+
+    public function create_bulk_terminal(request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'file' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()
+            ], 422);
+        }
+
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads'), $fileName);
+            $filePath = public_path('uploads') . '/' . $fileName;
+
+            $csv = array_map('str_getcsv', file($filePath));
+            $keys = array_shift($csv);
+
+            $numColumns = count($keys);
+            foreach ($csv as $row) {
+                if (count($row) !== $numColumns) {
+
+                    return response()->json([
+                        'status' => false,
+                        'message' => "CSV file contains rows with different number of columns"
+                    ], 422);
+
+                }
+            }
+
+            foreach ($csv as $row) {
+                $row = array_combine($keys, $row);
+                Terminal::create($row);
+            }
+
+
+            return response()->json([
+                'status' => true,
+                'message' => "CSV file imported successfully"
+            ], 200);
+
+        }
+
+
+        return response()->json([
+            'status' => false,
+            'message' => "Something went wrong"
+        ], 422);
+
     }
 
     public function update_terminal(request $request)

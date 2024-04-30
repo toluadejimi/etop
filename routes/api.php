@@ -76,6 +76,9 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('view-terminal', [TerminalController::class, 'view_all_terminal']);
         Route::get('delete-terminal', [TerminalController::class, 'delete_terminal']);
         Route::post('search-terminal', [TerminalController::class, 'search_terminal']);
+        Route::post('import-terminal', [TerminalController::class, 'create_bulk_terminal']);
+
+
 
 
 
