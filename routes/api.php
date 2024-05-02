@@ -24,6 +24,8 @@ Route::post('update-bank', [StoredataController::class, 'update_bank']);
 Route::post('delete_bank', [StoredataController::class, 'delete_bank']);
 Route::post('delete_user', [StoredataController::class, 'delete_user']);
 
+Route::any('delete-terminal', [TerminalopController::class, 'delete_terminal']);
+
 
 
 Route::group(['prefix' => 'admin'], function () {
