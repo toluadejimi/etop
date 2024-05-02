@@ -4,11 +4,49 @@ namespace App\Http\Controllers;
 
 use App\Models\Terminal;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class TerminalopController extends Controller
 {
 
+
+    public function  delete_terminal(request $request)
+    {
+
+        if (Auth::user()->role == 1 || Auth::user()->role == 2) {
+
+            $ck = Terminal::where('serialNumber', $request->serialNumber)->first();
+            if($ck == null){
+
+                return response()->json([
+
+                    'status' => true,
+                    'message' => "Terminal not found"
+
+                ], 422);
+
+            }
+
+            Terminal::where('serialNumber', $request->serialNumber)->delete();
+
+            return response()->json([
+
+                'status' => true,
+                'message' => "Terminal has been successfully deleted"
+
+            ], 200);
+
+
+
+        } else {
+
+            return response()->json([
+                'status' => false,
+                'message' => "You dont have permission to create a terminal"
+            ], 422);
+        }
+    }
 
     public
     function get_terminal_details(request $request)
