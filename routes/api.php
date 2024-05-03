@@ -79,6 +79,8 @@ Route::group(['prefix' => 'admin'], function () {
         Route::any('delete-terminal', [TerminalopController::class, 'delete_terminal']);
         Route::post('search-terminal', [TerminalController::class, 'search_terminal']);
         Route::post('import-terminal', [TerminalController::class, 'create_bulk_terminal']);
+        Route::get('export-terminal-bank', [TerminalController::class, 'get_terminal_by_bank_export']);
+        Route::get('get-terminal-bank', [TerminalController::class, 'get_terminal_by_bank']);
 
 
 

@@ -279,7 +279,7 @@ class TerminalController extends Controller
 
         if (Auth::user()->role == 1 || Auth::user()->role == 2 ) {
 
-            $ter = Terminal::latest()->paginate(10) ?? null;
+            $ter = Terminal::latest()->paginate(50) ?? null;
             if ($ter == null) {
                 return response()->json([
                     'status' => false,
@@ -355,6 +355,57 @@ class TerminalController extends Controller
 
             $keyword = $request->keyword;
             $results = Terminal::where('serialNumber', 'LIKE', "%$keyword%")->get();
+
+            return response()->json([
+
+                'status' => true,
+                'data' => $results
+
+            ], 200);
+
+
+
+        } else {
+
+            return response()->json([
+                'status' => false,
+                'message' => "You dont have permission to create a terminal"
+            ], 422);
+        }
+    }
+
+
+    public function get_terminal_by_bank(request $request)
+    {
+
+        if (Auth::user()->role == 1 || Auth::user()->role == 2) {
+
+            $results = Terminal::where('bank_id',$request->bank_id)->paginate('50');
+
+            return response()->json([
+
+                'status' => true,
+                'data' => $results
+
+            ], 200);
+
+
+
+        } else {
+
+            return response()->json([
+                'status' => false,
+                'message' => "You dont have permission to create a terminal"
+            ], 422);
+        }
+    }
+
+    public function get_terminal_by_bank_export(request $request)
+    {
+
+        if (Auth::user()->role == 1 || Auth::user()->role == 2) {
+
+            $results = Terminal::where('bank_id',$request->bank_id)->get();
 
             return response()->json([
 
