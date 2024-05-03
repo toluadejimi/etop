@@ -199,6 +199,32 @@ class BankController extends Controller
     }
 
 
+
+    public
+    function all_banks(request $request)
+    {
+
+        if (Auth::user()->role == 1 || Auth::user()->role == 2) {
+
+            $results = Bank::latest()->get();
+            return response()->json([
+
+                'status' => true,
+                'data' => $results
+
+            ], 200);
+
+
+        } else {
+
+            return response()->json([
+                'status' => false,
+                'message' => "You dont have permission to create a terminal"
+            ], 422);
+        }
+    }
+
+
     public
     function delete_bank(request $request)
     {
