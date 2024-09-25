@@ -349,7 +349,7 @@ class PosTrasnactionController extends Controller
 
         $bkey = Bank::where('id', $request->bank_id)->first()->bank_key ?? null;
 
-        if ($request->bank_key != $request->bank_key) {
+        if ($bkey != $request->bank_key) {
 
             return response()->json([
                 'status' => false,
