@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bank;
 use App\Models\PosLog;
 use App\Models\SuperAgent;
 use App\Models\Terminal;
@@ -323,6 +324,62 @@ class PosTrasnactionController extends Controller
     }
 
 
+    public function get_bank_transactions(request $request)
+    {
+
+        date_default_timezone_set('UTC');
+
+        if ($request->bank_id == null) {
+
+            return response()->json([
+                'status' => false,
+                'message' => "Bank ID  is required"
+            ]);
+
+        }
+
+        if ($request->bank_key == null) {
+
+            return response()->json([
+                'status' => false,
+                'message' => "Bank Key is required"
+            ]);
+
+        }
+
+        $bkey = Bank::where('id', $request->bank_id)->first()->bank_key ?? null;
+
+        if ($request->bank_key != $request->bank_key) {
+
+            return response()->json([
+                'status' => false,
+                'message' => "Bank Key is not valid"
+            ]);
+
+        }
+
+
+        if ($request->page != null) {
+
+            $data = PosLog::latest()->where('bank_id', $request->bank_id)->paginate($request->page);
+            return response()->json([
+                'status' => true,
+                'transaction' => $data,
+            ], 200);
+
+        } else {
+
+            $data = PosLog::latest()->where('bank_id', $request->bank_id)->paginate(50);
+            return response()->json([
+                'status' => true,
+                'transaction' => $data,
+            ], 200);
+
+        }
+
+
+    }
+
     public function EtopPosLogs(request $request)
     {
 
@@ -423,10 +480,10 @@ class PosTrasnactionController extends Controller
         $trasnaction->transactionType = $transactionType;
         $trasnaction->cardName = $cardName;
         $trasnaction->SerialNo = $SerialNo;
-        $trasnaction->createdAt= $created_at;
-        $trasnaction->updatedAt= $created_at;
-        $trasnaction->user_id= $user_id;
-        $trasnaction->bank_id= $bank_id;
+        $trasnaction->createdAt = $created_at;
+        $trasnaction->updatedAt = $created_at;
+        $trasnaction->user_id = $user_id;
+        $trasnaction->bank_id = $bank_id;
 
         $trasnaction->save();
 
@@ -605,10 +662,10 @@ class PosTrasnactionController extends Controller
         $trasnaction->transactionType = $transactionType;
         $trasnaction->cardName = $cardName;
         $trasnaction->SerialNo = $SerialNo;
-        $trasnaction->createdAt= $created_at;
-        $trasnaction->updatedAt= $created_at;
-        $trasnaction->user_id= $user_id;
-        $trasnaction->bank_id= $bank_id;
+        $trasnaction->createdAt = $created_at;
+        $trasnaction->updatedAt = $created_at;
+        $trasnaction->user_id = $user_id;
+        $trasnaction->bank_id = $bank_id;
         $trasnaction->save();
 
 

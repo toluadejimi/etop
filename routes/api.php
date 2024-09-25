@@ -106,15 +106,13 @@ Route::group(['prefix' => 'v1'], function () {
     Route::any('get-all-transactions', [PosTrasnactionController::class, 'get_all_transaction']);
 
 
+    Route::get('get-bank-transactions', [PosTrasnactionController::class, 'get_bank_transactions']);
+
+
 
     //UP TRNANSFER
-
     Route::any('notification', [PayByTransferController::class, 'webhook_notification']);
     Route::post('register-merchant', [PayByTransferController::class, 'register_merchant']);
-
-
-
-
 
 
     Route::any('get-all-logged-data/get-all-transactions', [PosTrasnactionController::class, 'get_all_transaction_by_filter']);
