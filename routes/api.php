@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\StoredataController;
 use App\Http\Controllers\Admin\TerminalController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\IbdcController;
 use App\Http\Controllers\PayByTransferController;
 use App\Http\Controllers\PosTrasnactionController;
 use App\Http\Controllers\TerminalopController;
@@ -117,6 +118,16 @@ Route::group(['prefix' => 'v1'], function () {
 
     Route::any('get-all-logged-data/get-all-transactions', [PosTrasnactionController::class, 'get_all_transaction_by_filter']);
     Route::any('complete-transaction', [PosTrasnactionController::class, 'EtopPos']);
+
+
+    //IBDC
+    Route::any('get-disco', [IbdcController::class, 'get_meter_disco']);
+    Route::any('validate-ibdc-meter', [IbdcController::class, 'validate_ibdc_meter']);
+
+
+
+
+
 
 
 });

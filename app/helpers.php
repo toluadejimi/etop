@@ -143,3 +143,15 @@ if (!function_exists('send_notification')) {
     }
 }
 
+
+
+
+
+function generateHash($vendor_code, $meter, $reference_id, $disco, $amount, $access_token, $pub_key, $priv_key)
+{
+    $combined_string = $vendor_code . "|" . $reference_id . "|" . $meter . "|" . $disco . "|" . $amount . "|" . $access_token . "|" . $pub_key;
+    $computed_hash = hash_hmac("sha1", $combined_string, $priv_key);
+
+    return $computed_hash;
+}
+

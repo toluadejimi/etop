@@ -358,7 +358,6 @@ class PosTrasnactionController extends Controller
 
         }
 
-
         if ($request->page != null) {
 
             $data = PosLog::latest()->where('bank_id', $request->bank_id)->paginate($request->page);
@@ -595,6 +594,84 @@ class PosTrasnactionController extends Controller
         $transactionType = $request->transactionType;
         $cardName = $request->cardName;
         $userID = $request->UserID;
+        $action = $request->action;
+        $access_token = $request->access_token;
+        $disco_type = $request->disco_type;
+        $phone = $request->phone;
+        $email = $request->email;
+        $meterNo = $request->meter_no;
+
+
+
+
+
+
+
+        if($action == "ibdc"){
+
+            $url = env('IBDCURL');
+            $pub_key = env('IBDCPUBKEY');
+            $priv_key = env('IBDCPRIVKEY');
+
+            $trx = str_pad(mt_rand(0, 999999999999), 12, '0', STR_PAD_LEFT); // Generate a 12-digit reference ID
+
+            $vendor_code =  env('IBDCVENDORCODE');
+
+            $hash = generateHash($vendor_code, $meterNo, $trx, $disco_type, $amount, $access_token, $pub_key, $priv_key);
+
+            $databody = array(
+
+            );
+            
+            $body = json_encode($databody);
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+
+                CURLOPT_URL => $url."vend_power.php?vendor_code=$vendor_code&reference_id=$trx&meter=$meterNo&access_token=$access_token&disco=$disco_type&phone=$phone&email=$email&response_format=json&hash=$hash&amount=$amount",
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'GET',
+                CURLOPT_POSTFIELDS => $body,
+                CURLOPT_HTTPHEADER => array(
+                    'Accept: application/json',
+                    'Content-Type: application/json',
+                ),
+            ));
+
+            $var = curl_exec($curl);
+            curl_close($curl);
+            $var = json_decode($var);
+            $status = $var->status ?? null;
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         if ($SerialNo == null) {
