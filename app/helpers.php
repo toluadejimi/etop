@@ -155,3 +155,13 @@ function generateHash($vendor_code, $meter, $reference_id, $disco, $amount, $acc
     return $computed_hash;
 }
 
+
+function generateHashVerify($vendor_code, $meterNo, $trx, $disco_type, $pub_key, $priv_key)
+{
+    $combined_string = $vendor_code . "|" . $trx . "|" . $meterNo . "|" . $disco_type . "|" . $pub_key;
+    $computed_hash = hash_hmac("sha1", $combined_string, $priv_key);
+
+    return $computed_hash;
+}
+
+

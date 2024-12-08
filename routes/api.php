@@ -123,6 +123,11 @@ Route::group(['prefix' => 'v1'], function () {
     //IBDC
     Route::any('get-disco', [IbdcController::class, 'get_meter_disco']);
     Route::any('validate-ibdc-meter', [IbdcController::class, 'validate_ibdc_meter']);
+    Route::any('buy-power', [IbdcController::class, 'buy_power']);
+    Route::any('buy-token', [IbdcController::class, 'buy_token']);
+
+
+
 
 
 
