@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\MeterToken;
 use App\Models\PosLog;
 use App\Models\Terminal;
 use Illuminate\Http\Request;
@@ -161,10 +162,6 @@ class IbdcController extends Controller
 
 
 
-
-
-
-
         if($action == "ibdc"){
 
             $url = env('IBDCURL');
@@ -205,15 +202,50 @@ class IbdcController extends Controller
 
 
             if($status == "00" && $message == "Successful" ){
+
+                $met = new MeterToken();
+                $met->eletic_company = "ibdc";
+                $met->disco_type = $disco_type;
+                $met->meter_no = $meterNo;
+                $met->ref = $trx;
+                $met->amount = $amount;
+                $met->units = $var->units;
+                $met->meter_token = $var->meter_token;
+                $met->address = $var->address;
+                $met->status = 2;
+                $met->note = "successful";
+                $met->rrn = $RRN;
+
+                $met->save();
+
+
                 $meter['wallet_balance'] = $var->wallet_balance;
                 $meter['ref'] = $var->ref;
                 $meter['amount'] = $var->amount;
                 $meter['units'] = $var->units;
                 $meter['meter_token'] = $var->meter_token;
+                $meter['address'] = $var->address;
                 $meter['message'] = "successful";
 
 
             }else{
+
+                $met = new MeterToken();
+                $met->eletic_company = "ibdc";
+                $met->disco_type = $disco_type;
+                $met->meter_no = $meterNo;
+                $met->ref = $trx;
+                $met->amount = $amount;
+                $met->units = $var->units ?? null;
+                $met->meter_token = $var->meter_token ?? null;
+                $met->address = $var->address ?? null;
+                $met->status = 1;
+                $met->note = $message;
+                $met->rrn = $RRN;
+
+                $met->save();
+
+
                 $meter['wallet_balance'] = null;
                 $meter['ref'] = null;
                 $meter['amount'] = null;
@@ -222,6 +254,12 @@ class IbdcController extends Controller
                 $meter['message'] = $message;
 
             }
+
+
+
+
+
+
 
 
 
