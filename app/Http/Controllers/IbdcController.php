@@ -430,6 +430,218 @@ class IbdcController extends Controller
 
 
 
+    public function reprint_token(request $request)
+    {
+        $RRN = $request->RRN;
+
+       $token =  MeterToken::where('rrn', $RRN)->first() ?? null;
+       $message = "RRN not found";
+       if($token == null){
+           $meter['wallet_balance'] = null;
+           $meter['ref'] = null;
+           $meter['amount'] = null;
+           $meter['units'] = null;
+           $meter['meter_token'] = null;
+           $meter['address'] = null;
+           $meter['message'] = $message;
+
+           return response()->json([
+               'status' => false,
+               'meter' => $meter ?? null
+           ], 422);
+
+       }else{
+
+           $meter['wallet_balance'] = $token->wallet_balance;
+           $meter['ref'] = $token->ref;
+           $meter['amount'] = $token->amount;
+           $meter['units'] = $token->units;
+           $meter['meter_token'] = $token->meter_token;
+           $meter['address'] = $token->address;
+           $meter['message'] = "successful";
+
+           return response()->json([
+              "status" => true,
+               'meter' => $meter
+           ], 200);
+
+       }
+
+    }
+    public function retry_token(request $request)
+    {
+
+        $RRN = $request->RRN;
+        $token =  MeterToken::where('rrn', $RRN)->first() ?? null;
+        $message = "RRN not found";
+        if($token == null){
+            $meter['wallet_balance'] = null;
+            $meter['ref'] = null;
+            $meter['amount'] = null;
+            $meter['units'] = null;
+            $meter['meter_token'] = null;
+            $meter['address'] = null;
+            $meter['message'] = $message;
+
+            return response()->json([
+                'status' => false,
+                'meter' => $meter
+            ], 422);
+
+        }
+
+        if($token == 2){
+            $message = "Token already generated";
+            $meter['wallet_balance'] = $token->wallet_balance;
+            $meter['ref'] = $token->ref;
+            $meter['amount'] = $token->amount;
+            $meter['units'] = $token->units;
+            $meter['meter_token'] = $token->meter_token;
+            $meter['address'] = $token->address;
+            $meter['message'] = $message;
+
+            return response()->json([
+                'status' => true,
+                'meter' => $meter
+            ], 200);
+
+        }
+
+        $token =  MeterToken::where('rrn', $RRN)->first() ?? null;
+        $status = PosLog::where('RRN', $RRN)->first()->status ?? null;
+        if($status == null){
+            $message = "Transaction not successful";
+            if($token == null){
+                $meter['wallet_balance'] = null;
+                $meter['ref'] = null;
+                $meter['amount'] = null;
+                $meter['units'] = null;
+                $meter['meter_token'] = null;
+                $meter['address'] = null;
+                $meter['message'] = $message;
+                return response()->json([
+                    'status' => false,
+                    'meter' => $meter ?? null
+                ], 422);
+            }
+
+            if($status != 1 ){
+                $message = "Transaction not successful";
+                $meter['wallet_balance'] = null;
+                $meter['ref'] = null;
+                $meter['amount'] = null;
+                $meter['units'] = null;
+                $meter['meter_token'] = null;
+                $meter['address'] = null;
+                $meter['message'] = $message;
+                return response()->json([
+                    'status' => false,
+                    'meter' => $meter ?? null
+                ], 422);
+            }
+
+
+
+        }else{
+
+            $meterNo = $token->meter_no;
+            $disco_type = $token->disco_type;
+            $amount = $token->amount;
+            $access_token = get_token($meterNo, $disco_type);
+            $url = env('IBDCURL');
+            $pub_key = env('IBDCPUBKEY');
+            $priv_key = env('IBDCPRIVKEY');
+            $trx = str_pad(mt_rand(0, 999999999999), 12, '0', STR_PAD_LEFT); // Generate a 12-digit reference ID
+            $vendor_code =  env('IBDCVENDORCODE');
+            $hash = generateHash($vendor_code, $meterNo, $trx, $disco_type, $amount, $access_token, $pub_key, $priv_key);
+
+            $databody = array(
+
+            );
+
+            $body = json_encode($databody);
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+
+                CURLOPT_URL => $url."vend_power.php?vendor_code=$vendor_code&reference_id=$trx&meter=$meterNo&access_token=$access_token&disco=$disco_type&phone=$phone&email=$email&response_format=json&hash=$hash&amount=$amount",
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'GET',
+                CURLOPT_POSTFIELDS => $body,
+                CURLOPT_HTTPHEADER => array(
+                    'Accept: application/json',
+                    'Content-Type: application/json',
+                ),
+            ));
+
+            $var = curl_exec($curl);
+            curl_close($curl);
+            $var = json_decode($var);
+            $status = $var->status ?? null;
+            $message = $var->message ?? null;
+
+            if($status == "00" && $message == "Successful" ){
+
+                MeterToken::where('rrn', $RRN)->update([
+                    'units' => $var->units,
+                    'meter_token' => $var->meter_token,
+                    'address' => $var->address,
+                    'status' => 2,
+                    'note' => "successful"
+                ]);
+
+                $meter['wallet_balance'] = $var->wallet_balance;
+                $meter['ref'] = $var->ref;
+                $meter['amount'] = $var->amount;
+                $meter['units'] = $var->units;
+                $meter['meter_token'] = $var->meter_token;
+                $meter['address'] = $var->address;
+                $meter['message'] = "successful";
+
+                return response()->json([
+                    'status'=> true,
+                    'meter' => $meter ?? null
+                ], 200);
+
+
+        }else{
+
+                MeterToken::where('rrn', $RRN)->update([
+                    'status' => 1,
+                    'note' => $message
+                ]);
+
+
+                $meter['wallet_balance'] = null;
+                $meter['ref'] = null;
+                $meter['amount'] = null;
+                $meter['units'] = null;
+                $meter['meter_token'] = null;
+                $meter['message'] = $message;
+
+
+                return response()->json([
+                    'status'=> true,
+                    'meter' => $meter ?? null
+                ], 422);
+
+            }
+
+        }
+
+
+
+
+
+
+
+    }
+
+
 
 
 
