@@ -126,6 +126,7 @@ Route::group(['prefix' => 'v1'], function () {
     Route::any('buy-power', [IbdcController::class, 'buy_power']);
     Route::any('buy-token', [IbdcController::class, 'buy_token']);
     Route::any('reprint-token', [IbdcController::class, 'reprint_token']);
+    Route::any('retry-token', [IbdcController::class, 'reprint_token']);
 
 
 
