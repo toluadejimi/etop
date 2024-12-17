@@ -728,7 +728,8 @@ class IbdcController extends Controller
                     'meter_tokens.amount',
                     'meter_tokens.units',
                     'meter_tokens.meter_token',
-                    'meter_tokens.address'
+                    'meter_tokens.address',
+                    'meter_tokens.meter_no'
                 )
                 ->take(50)
                 ->get() ?? null;
