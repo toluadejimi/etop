@@ -661,7 +661,7 @@ class IbdcController extends Controller
                 'units',
                 'meter_token',
                 'address',
-            )->where('SerialNo', $SerialNo)->where('status', 2)->get() ?? null;
+            )->where('SerialNo', $SerialNo)->get() ?? null;
             unset($data->created_at);
             unset($data->updated_at);
 
@@ -726,6 +726,16 @@ class IbdcController extends Controller
             $totalFailedAmount = PosLog::where('SerialNo', $SerialNo)->where('respCode', "2934")->sum('amount');
             $totalTransactionAmount = $totalSuccessAmount + $totalFailedAmount;
 
+            $token = MeterToken::latest()->select(
+                'ref',
+                'amount',
+                'units',
+                'meter_token',
+                'address',
+            )->where('SerialNo', $SerialNo)->get() ?? null;
+            unset($data->created_at);
+            unset($data->updated_at);
+
 
             $mer = Terminal::where('serialNumber', $SerialNo)->first() ?? null;
             if ($data->isEmpty()) {
@@ -745,6 +755,7 @@ class IbdcController extends Controller
                         'tid' => $mer->tid,
                         'merchantaddress' => $mer->merchantaddress
                     ],
+                    'meter' => $token,
                     'error' => null,
                 ], 200);
 
@@ -766,6 +777,7 @@ class IbdcController extends Controller
                         'tid' => $mer->tid,
                         'merchantaddress' => $mer->merchantaddress
                     ],
+                    'meter' => [],
                     'error' => null,
                 ], 200);
             }
@@ -999,7 +1011,7 @@ class IbdcController extends Controller
                 'tid' => null,
                 'merchantaddress' => null
             ],
-            'meter' => $token,
+            'meter' => [],
             'error' => true,
         ], 200);
 
