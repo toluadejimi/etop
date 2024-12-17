@@ -720,8 +720,8 @@ class IbdcController extends Controller
             $SerialNo = $request->header('serialnumber');
 
             $data = PosLog::latest()
-                ->where('PosLog.SerialNo', $SerialNo)
-                ->join('meter_tokens', 'meter_tokens.SerialNo', '=', 'pos_logs.SerialNo')
+                ->where('pos_logs.SerialNo', $SerialNo)
+                ->join('meter_tokens', 'meter_tokens.SerialNo', '=', 'pos_logs.SerialNo') // Join condition remains the same
                 ->select(
                     'pos_logs.*',
                     'meter_tokens.ref',
@@ -732,6 +732,7 @@ class IbdcController extends Controller
                 )
                 ->take(50)
                 ->get() ?? null;
+
 
 
             $totalSuccessAmount = PosLog::where('SerialNo', $SerialNo)->where('respCode', "00")->sum('amount');
