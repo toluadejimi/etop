@@ -718,9 +718,21 @@ class IbdcController extends Controller
         if ($request->startofday == null && $request->endofday == null) {
 
             $SerialNo = $request->header('serialnumber');
-            $data = PosLog::latest()->where('SerialNo', $SerialNo)->take('50')->get() ?? null;
-            unset($data->created_at);
-            unset($data->updated_at);
+
+            $data = PosLog::latest()
+                ->where('PosLog.SerialNo', $SerialNo)
+                ->join('meter_tokens', 'meter_tokens.SerialNo', '=', 'pos_logs.SerialNo')
+                ->select(
+                    'pos_logs.*',
+                    'meter_tokens.ref',
+                    'meter_tokens.amount',
+                    'meter_tokens.units',
+                    'meter_tokens.meter_token',
+                    'meter_tokens.address'
+                )
+                ->take(50)
+                ->get() ?? null;
+
 
             $totalSuccessAmount = PosLog::where('SerialNo', $SerialNo)->where('respCode', "00")->sum('amount');
             $totalFailedAmount = PosLog::where('SerialNo', $SerialNo)->where('respCode', "2934")->sum('amount');
@@ -733,6 +745,7 @@ class IbdcController extends Controller
                 'meter_token',
                 'address',
             )->where('SerialNo', $SerialNo)->get() ?? null;
+
             unset($data->created_at);
             unset($data->updated_at);
 
