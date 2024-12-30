@@ -230,6 +230,7 @@ class IbdcController extends Controller
             $status = $var->status ?? null;
             $message = $var->message ?? null;
 
+            dd($var);
 
 
             if($status == "00" && $message == "Successful" ){
