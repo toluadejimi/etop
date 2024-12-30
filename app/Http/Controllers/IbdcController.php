@@ -160,6 +160,38 @@ class IbdcController extends Controller
 
 
 
+
+        if ($SerialNo == null) {
+            $message = "Serial Number can not be empty";
+            return error_response($message);
+        }
+
+        $rrn = PosLog::where('RRN', $request->RRN)->first()->log_status ?? null;
+        if ($rrn == 1) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Transaction already successful',
+            ], 422);
+
+        }
+
+
+        $SerialNo = Terminal::where('serialNumber', $SerialNo)->first()->serialNumber ?? null;
+        if ($SerialNo == null) {
+            $message = "No user attached to the serial number | $SerialNo";
+            return error_response($message);
+        }
+
+        $trx = PosLog::where('RRN', $request->RRN)->where('log_status', 0)->update([
+            'log_status' => 1,
+        ]) ?? null;
+
+        $user_id = Terminal::where('serialNumber', $SerialNo)->first()->user_id ?? null;
+        $bank_id = Terminal::where('serialNumber', $SerialNo)->first()->bank_id ?? null;
+
+
+
+
         if($action == "ibdc"){
 
             $url = env('IBDCURL');
@@ -198,8 +230,6 @@ class IbdcController extends Controller
             $status = $var->status ?? null;
             $message = $var->message ?? null;
 
-            dd($var);
-
 
 
             if($status == "00" && $message == "Successful" ){
@@ -229,108 +259,47 @@ class IbdcController extends Controller
                 $meter['message'] = "successful";
 
 
-            }elseif($status == "00" && $message != "Successful"){
+
+                // Get the current time
+                $current_time = time();
+                $one_hour_later = $current_time + 3600; // 3600 seconds = 1 hour
+                $created_at = date('Y-m-d H:i:s', $one_hour_later);
 
 
-
-                $met = new MeterToken();
-                $met->eletic_company = "ibdc";
-                $met->disco_type = $disco_type;
-                $met->meter_no = $meterNo;
-                $met->ref = $trx;
-                $met->amount = $amount;
-                $met->units = $var->units ?? null;
-                $met->meter_token = $var->meter_token ?? null;
-                $met->address = $var->address ?? null;
-                $met->status = 1;
-                $met->note = $message;
-                $met->SerialNo = $SerialNo;
-                $met->rrn = $RRN;
-                $met->save();
-
-
-                $meter['wallet_balance'] = null;
-                $meter['ref'] = null;
-                $meter['amount'] = null;
-                $meter['units'] = null;
-                $meter['meter_token'] = null;
-                $meter['message'] = $message;
-
-            }
-
-        }
-
-
-
-        if ($SerialNo == null) {
-            $message = "Serial Number can not be empty";
-            return error_response($message);
-        }
-
-        $rrn = PosLog::where('RRN', $request->RRN)->first()->log_status ?? null;
-        if ($rrn == 1) {
-            return response()->json([
-                'status' => true,
-                'message' => 'Transaction already successful',
-            ], 422);
-
-        }
-
-
-        $SerialNo = Terminal::where('serialNumber', $SerialNo)->first()->serialNumber ?? null;
-        if ($SerialNo == null) {
-            $message = "No user attached to the serial number | $SerialNo";
-            return error_response($message);
-        }
-
-        $trx = PosLog::where('RRN', $request->RRN)->where('log_status', 0)->update([
-            'log_status' => 1,
-        ]) ?? null;
-
-        $user_id = Terminal::where('serialNumber', $SerialNo)->first()->user_id ?? null;
-        $bank_id = Terminal::where('serialNumber', $SerialNo)->first()->bank_id ?? null;
-
-
-        // Get the current time
-        $current_time = time();
-        $one_hour_later = $current_time + 3600; // 3600 seconds = 1 hour
-        $created_at = date('Y-m-d H:i:s', $one_hour_later);
-
-
-        $trasnaction = new PosLog();
-        $trasnaction->RRN = $RRN;
-        $trasnaction->STAN = $STAN;
-        $trasnaction->accountBalance = $accountBalance;
-        $trasnaction->acquiringInstitutionIdCode = $acquiringInstitutionIdCode;
-        $trasnaction->authCode = $authCode;
-        $trasnaction->cardCardSequenceNum = $cardCardSequenceNum;
-        $trasnaction->cardExpireData = $cardExpireData;
-        $trasnaction->forwardingInstCode = $forwardingInstCode;
-        $trasnaction->merchantNo = $merchantNo;
-        $trasnaction->amount = $amount;
-        $trasnaction->accountType = $accountType;
-        $trasnaction->tid = $tid;
-        $trasnaction->merchantName = $merchantName;
-        $trasnaction->pan = $pan;
-        $trasnaction->pinBlock = $pinBlock;
-        $trasnaction->receiptNumber = $receiptNumber;
-        $trasnaction->respCode = $respCode;
-        $trasnaction->responseMessage = $responseMessage;
-        $trasnaction->status = $status;
-        $trasnaction->successResponse = $successResponse;
-        $trasnaction->systemTraceAuditNo = $systemTraceAuditNo;
-        $trasnaction->terminalId = $terminalId;
-        $trasnaction->transactionDate = $transactionDate;
-        $trasnaction->transactionDateTime = $transactionDateTime;
-        $trasnaction->transactionTime = $transactionTime;
-        $trasnaction->transactionType = $transactionType;
-        $trasnaction->cardName = $cardName;
-        $trasnaction->SerialNo = $SerialNo;
-        $trasnaction->createdAt = $created_at;
-        $trasnaction->updatedAt = $created_at;
-        $trasnaction->user_id = $user_id;
-        $trasnaction->bank_id = $bank_id;
-        $trasnaction->save();
+                $trasnaction = new PosLog();
+                $trasnaction->RRN = $RRN;
+                $trasnaction->STAN = $STAN;
+                $trasnaction->accountBalance = $accountBalance;
+                $trasnaction->acquiringInstitutionIdCode = $acquiringInstitutionIdCode;
+                $trasnaction->authCode = $authCode;
+                $trasnaction->cardCardSequenceNum = $cardCardSequenceNum;
+                $trasnaction->cardExpireData = $cardExpireData;
+                $trasnaction->forwardingInstCode = $forwardingInstCode;
+                $trasnaction->merchantNo = $merchantNo;
+                $trasnaction->amount = $amount;
+                $trasnaction->accountType = $accountType;
+                $trasnaction->tid = $tid;
+                $trasnaction->merchantName = $merchantName;
+                $trasnaction->pan = $pan;
+                $trasnaction->pinBlock = $pinBlock;
+                $trasnaction->receiptNumber = $receiptNumber;
+                $trasnaction->respCode = $respCode;
+                $trasnaction->responseMessage = $responseMessage;
+                $trasnaction->status = $status;
+                $trasnaction->successResponse = $successResponse;
+                $trasnaction->systemTraceAuditNo = $systemTraceAuditNo;
+                $trasnaction->terminalId = $terminalId;
+                $trasnaction->transactionDate = $transactionDate;
+                $trasnaction->transactionDateTime = $transactionDateTime;
+                $trasnaction->transactionTime = $transactionTime;
+                $trasnaction->transactionType = $transactionType;
+                $trasnaction->cardName = $cardName;
+                $trasnaction->SerialNo = $SerialNo;
+                $trasnaction->createdAt = $created_at;
+                $trasnaction->updatedAt = $created_at;
+                $trasnaction->user_id = $user_id;
+                $trasnaction->bank_id = $bank_id;
+                $trasnaction->save();
 
 
 //        try {
@@ -397,26 +366,188 @@ class IbdcController extends Controller
 //            echo "$e";
 //        }
 
-        $mer = Terminal::where('serialNumber', $SerialNo)->first() ?? null;
+                $mer = Terminal::where('serialNumber', $SerialNo)->first() ?? null;
+
+                return response()->json([
+                    'newTransaction' => [
+                        'success' => true,
+                        'transaction' => $trasnaction,
+                    ],
+                    'merchantName' => $mer->merchantName,
+                    'mid' => $mer->mid,
+                    'allTransaction' => null,
+                    'message' => "Transaction initiated successfully",
+                    'merchantDetails' => [
+                        'merchantName' => $mer->merchantName,
+                        'serialnumber' => $mer->serialNumber,
+                        'mid' => $mer->mid,
+                        'tid' => $mer->tid,
+                        'merchantaddress' => $mer->merchantaddress
+                    ],
+                    'meter' => $meter ?? null
+                ], 200);
+
+
+            }else{
+
+                $met = new MeterToken();
+                $met->eletic_company = "ibdc";
+                $met->disco_type = $disco_type;
+                $met->meter_no = $meterNo;
+                $met->ref = $trx;
+                $met->amount = $amount;
+                $met->units = $var->units ?? null;
+                $met->meter_token = $var->meter_token ?? null;
+                $met->address = $var->address ?? null;
+                $met->status = 1;
+                $met->note = $message;
+                $met->SerialNo = $SerialNo;
+                $met->rrn = $RRN;
+                $met->save();
+
+
+                $meter['wallet_balance'] = null;
+                $meter['ref'] = null;
+                $meter['amount'] = null;
+                $meter['units'] = null;
+                $meter['meter_token'] = null;
+                $meter['message'] = $message;
+
+                // Get the current time
+                $current_time = time();
+                $one_hour_later = $current_time + 3600; // 3600 seconds = 1 hour
+                $created_at = date('Y-m-d H:i:s', $one_hour_later);
+
+
+                $trasnaction = new PosLog();
+                $trasnaction->RRN = $RRN;
+                $trasnaction->STAN = $STAN;
+                $trasnaction->accountBalance = $accountBalance;
+                $trasnaction->acquiringInstitutionIdCode = $acquiringInstitutionIdCode;
+                $trasnaction->authCode = $authCode;
+                $trasnaction->cardCardSequenceNum = $cardCardSequenceNum;
+                $trasnaction->cardExpireData = $cardExpireData;
+                $trasnaction->forwardingInstCode = $forwardingInstCode;
+                $trasnaction->merchantNo = $merchantNo;
+                $trasnaction->amount = $amount;
+                $trasnaction->accountType = $accountType;
+                $trasnaction->tid = $tid;
+                $trasnaction->merchantName = $merchantName;
+                $trasnaction->pan = $pan;
+                $trasnaction->pinBlock = $pinBlock;
+                $trasnaction->receiptNumber = $receiptNumber;
+                $trasnaction->respCode = $respCode;
+                $trasnaction->responseMessage = $responseMessage;
+                $trasnaction->status = $status;
+                $trasnaction->successResponse = $successResponse;
+                $trasnaction->systemTraceAuditNo = $systemTraceAuditNo;
+                $trasnaction->terminalId = $terminalId;
+                $trasnaction->transactionDate = $transactionDate;
+                $trasnaction->transactionDateTime = $transactionDateTime;
+                $trasnaction->transactionTime = $transactionTime;
+                $trasnaction->transactionType = $transactionType;
+                $trasnaction->cardName = $cardName;
+                $trasnaction->SerialNo = $SerialNo;
+                $trasnaction->createdAt = $created_at;
+                $trasnaction->updatedAt = $created_at;
+                $trasnaction->user_id = $user_id;
+                $trasnaction->bank_id = $bank_id;
+                $trasnaction->save();
+
+
+//        try {
+//
+//            $curl = curl_init();
+//            $data = array(
+//
+//                'RRN' => $RRN,
+//                'STAN' => $STAN,
+//                'accountBalance' => $Balance ?? $accountBalance,
+//                'acquiringInstitutionIdCode' => $acquiringInstitutionIdCode,
+//                'authCode' => $authCode,
+//                'cardCardSequenceNum' => $cardCardSequenceNum,
+//                'cardExpireData' => $cardExpireData,
+//                'forwardingInstCode' => $forwardingInstCode,
+//                'merchantNo' => $merchantNo,
+//                'amount' => $amount,
+//                'accountType' => $accountType,
+//                'tid' => $tid,
+//                'merchantName' => $merchantName,
+//                'pan' => $pan,
+//                'pinBlock' => $pinBlock,
+//                'receiptNumber' => $receiptNumber,
+//                'respCode' => $respCode,
+//                'responseMessage' => $responseMessage,
+//                'status' => $status,
+//                'successResponse' => $successResponse,
+//                'systemTraceAuditNo' => $systemTraceAuditNo,
+//                'terminalId' => $terminalId,
+//                'transactionDate' => $transactionDate,
+//                'transactionDateTime' => $transactionDateTime,
+//                'transactionTime' => $transactionTime,
+//                'transactionType' => $transactionType,
+//                'cardName' => $cardName,
+//                'SerialNo' => $SerialNo,
+//                'createdAt' => $created_at,
+//                'updatedAt' => $created_at,
+//                'user_id' => $user_id,
+//                'bank_id' => $bank_id,
+
+//            );
+//
+//            $post_data = json_encode($data);
+//            curl_setopt_array($curl, array(
+//                CURLOPT_URL => 'https://etopmerchant.com/api/store-transaction',
+//                CURLOPT_RETURNTRANSFER => true,
+//                CURLOPT_ENCODING => '',
+//                CURLOPT_MAXREDIRS => 10,
+//                CURLOPT_TIMEOUT => 0,
+//                CURLOPT_FOLLOWLOCATION => true,
+//                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+//                CURLOPT_CUSTOMREQUEST => 'POST',
+//                CURLOPT_POSTFIELDS => $post_data,
+//                CURLOPT_HTTPHEADER => array(
+//                    'Content-Type: application/json'
+//                ),
+//            ));
+//
+//            $var = curl_exec($curl);
+//            curl_close($curl);
+//
+//
+//        } catch (QueryException $e) {
+//            echo "$e";
+//        }
+
+                $mer = Terminal::where('serialNumber', $SerialNo)->first() ?? null;
+
+                return response()->json([
+                    'newTransaction' => [
+                        'success' => true,
+                        'transaction' => $trasnaction,
+                    ],
+                    'merchantName' => $mer->merchantName,
+                    'mid' => $mer->mid,
+                    'allTransaction' => null,
+                    'message' => "Transaction initiated successfully",
+                    'merchantDetails' => [
+                        'merchantName' => $mer->merchantName,
+                        'serialnumber' => $mer->serialNumber,
+                        'mid' => $mer->mid,
+                        'tid' => $mer->tid,
+                        'merchantaddress' => $mer->merchantaddress
+                    ],
+                    'meter' => $meter ?? null
+                ], 200);
+
+            }
+
+        }
 
         return response()->json([
-            'newTransaction' => [
-                'success' => true,
-                'transaction' => $trasnaction,
-            ],
-            'merchantName' => $mer->merchantName,
-            'mid' => $mer->mid,
-            'allTransaction' => null,
-            'message' => "Transaction initiated successfully",
-            'merchantDetails' => [
-                'merchantName' => $mer->merchantName,
-                'serialnumber' => $mer->serialNumber,
-                'mid' => $mer->mid,
-                'tid' => $mer->tid,
-                'merchantaddress' => $mer->merchantaddress
-            ],
-            'meter' => $meter ?? null
+            'message' => 'something went wrong'
         ], 200);
+
     }
 
 
