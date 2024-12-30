@@ -230,8 +230,6 @@ class IbdcController extends Controller
             $status = $var->status ?? null;
             $message = $var->message ?? null;
 
-
-
             if($status == "00" && $message == "Successfull" ){
 
                 $met = new MeterToken();
