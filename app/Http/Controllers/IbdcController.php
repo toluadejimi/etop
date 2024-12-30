@@ -199,6 +199,7 @@ class IbdcController extends Controller
             $message = $var->message ?? null;
 
 
+
             if($status == "00" && $message == "Successful" ){
 
                 $met = new MeterToken();
@@ -217,7 +218,6 @@ class IbdcController extends Controller
 
                 $met->save();
 
-
                 $meter['wallet_balance'] = $var->wallet_balance;
                 $meter['ref'] = $var->ref;
                 $meter['amount'] = $var->amount;
@@ -227,7 +227,10 @@ class IbdcController extends Controller
                 $meter['message'] = "successful";
 
 
-            }else{
+            }elseif($status == "00" && $message != "Successful"){
+
+                $mes = "Error on IBDC >>>>>>> $message";
+                send_notification($mes);
 
                 $met = new MeterToken();
                 $met->eletic_company = "ibdc";
@@ -242,7 +245,6 @@ class IbdcController extends Controller
                 $met->note = $message;
                 $met->SerialNo = $SerialNo;
                 $met->rrn = $RRN;
-
                 $met->save();
 
 
@@ -254,8 +256,6 @@ class IbdcController extends Controller
                 $meter['message'] = $message;
 
             }
-
-
 
         }
 
@@ -398,9 +398,6 @@ class IbdcController extends Controller
 //        }
 
         $mer = Terminal::where('serialNumber', $SerialNo)->first() ?? null;
-
-
-
 
         return response()->json([
             'newTransaction' => [
