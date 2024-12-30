@@ -198,6 +198,8 @@ class IbdcController extends Controller
             $status = $var->status ?? null;
             $message = $var->message ?? null;
 
+            dd($var);
+
 
 
             if($status == "00" && $message == "Successful" ){
@@ -229,8 +231,7 @@ class IbdcController extends Controller
 
             }elseif($status == "00" && $message != "Successful"){
 
-                $mes = "Error on IBDC >>>>>>> $message";
-                send_notification($mes);
+
 
                 $met = new MeterToken();
                 $met->eletic_company = "ibdc";
@@ -281,7 +282,6 @@ class IbdcController extends Controller
             $message = "No user attached to the serial number | $SerialNo";
             return error_response($message);
         }
-
 
         $trx = PosLog::where('RRN', $request->RRN)->where('log_status', 0)->update([
             'log_status' => 1,
