@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Terminal;
+use App\Models\Zone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -10,6 +11,35 @@ use Illuminate\Support\Facades\Hash;
 class TerminalopController extends Controller
 {
 
+
+    public function view_terminal(request $request)
+    {
+
+        $data['ter'] = Terminal::where('id', $request->t_id)->first();
+        $data['zones'] = Zone::where('user_id', Auth::id())->get();
+
+        return view('terminal', $data);
+
+
+    }
+
+    public function set_geofence(Request $request)
+    {
+
+
+        $geo = Terminal::where('serial_no', $request->serial_no)->update(
+            [
+                'geo_fence_id' => $request->zone_id
+            ]
+
+        );
+
+        return back()->with('message', "Zone has been updated for geofence");
+
+
+
+
+    }
 
     public function  delete_terminal(request $request)
     {
@@ -48,26 +78,113 @@ class TerminalopController extends Controller
         }
     }
 
+
+
+
     public
     function get_terminal_details(request $request)
     {
 
         $SerialNo = $request->header('serialnumber');
-
         $data = GetTerminalDetails($SerialNo);
+
+        $lat = $request->latitude;
+        $lng = $request->longitude;
+
+        $deviceLat = $request->latitude;
+        $deviceLng = $request->longitude;
 
         if ($data == null) {
             $message = "Terminal Not Found";
             return error_response($message);
         }
 
+
+
+        if($lng == null || $lng == null ){
+            $geofence = [];
+        }else{
+
+            $zone_id = Terminal::where('serialNumber', $SerialNo)->first()->geo_fence_id;
+            $data2['zone'] = Zone::where('id', $zone_id)->first();
+            $geofenceCoordinates = [
+                [
+                    'lat' => $data2['zone']->lat_1 ?? 0,
+                    'lng' => $data2['zone']->lng_1 ?? 0,
+                ],
+                [
+                    'lat' => $data2['zone']->lat_2 ?? 0,
+                    'lng' => $data2['zone']->lng_2 ?? 0,
+                ],
+                [
+                    'lat' => $data2['zone']->lat_3 ?? 0,
+                    'lng' => $data2['zone']->lng_3 ?? 0,
+                ],
+                [
+                    'lat' => $data2['zone']->lat_4 ?? 0,
+                    'lng' => $data2['zone']->lng_4 ?? 0,
+                ]
+            ];
+
+
+            $geofence = $this->isLocationInsideGeofence($deviceLat, $deviceLng, $geofenceCoordinates);
+
+
+        }
+
+
         return response()->json([
             'status' => true,
             'terminal' => $data,
+            'geofence' => $geofence,
             'terminals' => null,
             'error' => null
         ], 200);
 
+    }
+
+
+
+    private function isLocationInsideGeofence($lat, $lng, $geofenceCoordinates)
+    {
+        $polygon = [];
+        foreach ($geofenceCoordinates as $coordinate) {
+            $polygon[] = [$coordinate['lat'], $coordinate['lng']];
+        }
+        return $this->pointInPolygon($lat, $lng, $polygon);
+    }
+
+
+    private function pointInPolygon($lat, $lng, $polygon)
+    {
+
+
+        $inside = false;
+        $n = count($polygon);
+        $x = $lat;
+        $y = $lng;
+        $p1x = $polygon[0][0];
+        $p1y = $polygon[0][1];
+        for ($i = 1; $i <= $n; $i++) {
+            $p2x = $polygon[$i % $n][0];
+            $p2y = $polygon[$i % $n][1];
+            if ($y > min($p1y, $p2y)) {
+                if ($y <= max($p1y, $p2y)) {
+                    if ($x <= max($p1x, $p2x)) {
+                        if ($p1y != $p2y) {
+                            $xinters = ($y - $p1y) * ($p2x - $p1x) / ($p2y - $p1y) + $p1x;
+                        }
+                        if ($p1x == $p2x || $x <= $xinters) {
+                            $inside = !$inside;
+                        }
+                    }
+                }
+            }
+            $p1x = $p2x;
+            $p1y = $p2y;
+        }
+
+        return $inside;
     }
 
 

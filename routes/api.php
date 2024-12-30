@@ -44,8 +44,6 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('all-banks', [BankController::class, 'all_banks']);
 
 
-
-
         //Dashboard
         Route::get('dashboard', [DashboardController::class, 'dashboard_data']);
 

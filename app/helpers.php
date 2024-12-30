@@ -2,7 +2,7 @@
 
 
 use App\Models\Terminal;
-use Illuminate\Http\Request;
+use App\Models\Zone;
 
 
 if (!function_exists('uptoken')) {
@@ -51,11 +51,9 @@ if (!function_exists('uptoken')) {
 
         $token = $var->data->accessToken;
 
-        if($status == true){
+        if ($status == true) {
             return $token;
         }
-
-
 
 
     }
@@ -145,9 +143,6 @@ if (!function_exists('send_notification')) {
 }
 
 
-
-
-
 function generateHash($vendor_code, $meter, $reference_id, $disco, $amount, $access_token, $pub_key, $priv_key)
 {
     $combined_string = $vendor_code . "|" . $reference_id . "|" . $meter . "|" . $disco . "|" . $amount . "|" . $access_token . "|" . $pub_key;
@@ -164,8 +159,6 @@ function generateHashVerify($vendor_code, $meterNo, $trx, $disco_type, $pub_key,
 
     return $computed_hash;
 }
-
-
 
 
 function get_token($meterNo, $disco_type)
@@ -216,6 +209,84 @@ function get_token($meterNo, $disco_type)
     }
 
 
+}
+
+
+function geofence($lat, $lng, $serial_no)
+{
+
+    $deviceLat = $lat;
+    $deviceLng = $lng;
+
+    $zone_id = Terminal::where('serialNumber', $serial_no)->first()->geo_fence_id;
+    $data['zone'] = Zone::where('id', $zone_id)->first();
+    $geofenceCoordinates = [
+        [
+            'lat' => $data['zone']->lat_1 ?? 0,
+            'lng' => $data['zone']->lng_1 ?? 0,
+        ],
+        [
+            'lat' => $data['zone']->lat_2 ?? 0,
+            'lng' => $data['zone']->lng_2 ?? 0,
+        ],
+        [
+            'lat' => $data['zone']->lat_3 ?? 0,
+            'lng' => $data['zone']->lng_3 ?? 0,
+        ],
+        [
+            'lat' => $data['zone']->lat_4 ?? 0,
+            'lng' => $data['zone']->lng_4 ?? 0,
+        ]
+    ];
+
+
+
+    $isInside = isLocationInsideGeofence($deviceLat, $deviceLng, $geofenceCoordinates);
+    return  $isInside;
+
+}
+
+function pointInPolygon($lat, $lng, $polygon)
+{
+    $inside = false;
+    $n = count($polygon);
+    $x = $lat;
+    $y = $lng;
+    $p1x = $polygon[0][0];
+    $p1y = $polygon[0][1];
+    for ($i = 1; $i <= $n; $i++) {
+        $p2x = $polygon[$i % $n][0];
+        $p2y = $polygon[$i % $n][1];
+        if ($y > min($p1y, $p2y)) {
+            if ($y <= max($p1y, $p2y)) {
+                if ($x <= max($p1x, $p2x)) {
+                    if ($p1y != $p2y) {
+                        $xinters = ($y - $p1y) * ($p2x - $p1x) / ($p2y - $p1y) + $p1x;
+                    }
+                    if ($p1x == $p2x || $x <= $xinters) {
+                        $inside = !$inside;
+                    }
+                }
+            }
+        }
+        $p1x = $p2x;
+        $p1y = $p2y;
+    }
+
+
+    return $inside;
+
+
+}
+
+
+function isLocationInsideGeofence($lat, $lng, $geofenceCoordinates)
+{
+    $polygon = [];
+    foreach ($geofenceCoordinates as $coordinate) {
+        $polygon[] = [$coordinate['lat'], $coordinate['lng']];
+    }
+    return pointInPolygon($lat, $lng, $polygon);
 }
 
 

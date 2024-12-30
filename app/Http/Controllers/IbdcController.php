@@ -67,8 +67,6 @@ class IbdcController extends Controller
         $hash = generateHashVerify($vendor_code, $meterNo, $trx, $disco_type, $pub_key, $priv_key);
 
 
-
-
         $databody = array();
         $body = json_encode($databody);
         $curl = curl_init();
