@@ -230,10 +230,9 @@ class IbdcController extends Controller
             $status = $var->status ?? null;
             $message = $var->message ?? null;
 
-            dd($var);
 
 
-            if($status == "00" && $message == "Successful" ){
+            if($status == "00" && $message == "Successfull" ){
 
                 $met = new MeterToken();
                 $met->eletic_company = "ibdc";
@@ -252,12 +251,13 @@ class IbdcController extends Controller
                 $met->save();
 
                 $meter['wallet_balance'] = $var->wallet_balance;
-                $meter['ref'] = $var->ref;
-                $meter['amount'] = $var->amount;
+                $meter['ref'] = $var->disco_ref;
+                $meter['kct1'] = $var->kct1;
+                $meter['kct2'] = $var->kct2;
+                $meter['amount'] = $amount;
                 $meter['units'] = $var->units;
                 $meter['meter_token'] = $var->meter_token;
-                $meter['address'] = $var->address;
-                $meter['message'] = "successful";
+                $meter['message'] = $message;
 
 
 
