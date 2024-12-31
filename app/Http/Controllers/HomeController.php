@@ -336,7 +336,7 @@ class HomeController extends Controller
 
         $bank_id = SuperAgent::where('user_id', Auth::id())->first()->bank_id;
         $data['customers'] = User::where('bank_id', $bank_id)->where('role', 2)->get();
-        $data['terminal']  = Terminal::where('register_under_id', $bank_id)->get();
+        $data['terminal']  = Terminal::where('bank_id', $bank_id)->get();
 
         $user_id = $request->user_id;
         $data['user'] =  User::where('id', $user_id)->first() ?? null;
