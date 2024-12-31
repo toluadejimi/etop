@@ -334,7 +334,7 @@ class HomeController extends Controller
     public function view_terminal(request $request)
     {
 
-        $bank_id = User::where('user_id', Auth::id())->first()->bank_id;
+        $bank_id = User::where('id', Auth::id())->first()->bank_id;
         $data['customers'] = User::where('bank_id', $bank_id)->where('role', 2)->get();
         $data['terminal']  = Terminal::where('bank_id', $bank_id)->get();
 
