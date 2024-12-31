@@ -334,13 +334,10 @@ class HomeController extends Controller
     public function view_terminal(request $request)
     {
 
-        $under_code = SuperAgent::where('user_id', Auth::id())->first()->register_under_id;
-        $super_agent_id = SuperAgent::where('user_id', Auth::id())->first()->id;
+        $bank_id = SuperAgent::where('user_id', Auth::id())->first()->bank_id;
 
-
-        $data['customers'] = User::where('register_under_id', $under_code)->get();
-
-        $data['terminal']  = Terminal::where('register_under_id', $under_code)->get();
+        $data['customers'] = User::where('bank_id', $bank_id)->where('role, 2')->get();
+        $data['terminal']  = Terminal::where('register_under_id', $bank_id)->get();
 
         $user_id = $request->user_id;
         $data['user'] =  User::where('id', $user_id)->first() ?? null;
