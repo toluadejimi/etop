@@ -92,8 +92,6 @@ class TerminalopController extends Controller
         $bank_id = Terminal::where('serialNumber', $SerialNo)->first()->bank_id ?? null;
         $min_amount = Bank::where('id', $bank_id)->first()->min_amount ?? null;
 
-
-
         $lat = $request->latitude;
         $lng = $request->longitude;
 
