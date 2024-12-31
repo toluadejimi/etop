@@ -107,7 +107,7 @@ class TerminalopController extends Controller
 
 
         if($lng == null || $lng == null ){
-            $geofence = [];
+            $geofence = true;
         }else{
 
             $zone_id = Terminal::where('serialNumber', $SerialNo)->first()->geo_fence_id;
