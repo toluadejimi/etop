@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bank;
 use App\Models\Terminal;
 use App\Models\Zone;
 use Illuminate\Http\Request;
@@ -88,6 +89,11 @@ class TerminalopController extends Controller
         $SerialNo = $request->header('serialnumber');
         $data = GetTerminalDetails($SerialNo);
 
+        $bank_id = Terminal::where('serialNumber', $SerialNo)->first()->bank_id ?? null;
+        $min_amount = Bank::where('id', $bank_id)->first()->min_amount ?? null;
+
+
+
         $lat = $request->latitude;
         $lng = $request->longitude;
 
@@ -98,6 +104,7 @@ class TerminalopController extends Controller
             $message = "Terminal Not Found";
             return error_response($message);
         }
+
 
 
 
@@ -137,6 +144,7 @@ class TerminalopController extends Controller
             'status' => true,
             'terminal' => $data,
             'geofence' => $geofence,
+            'min_amount' => $min_amount,
             'terminals' => null,
             'error' => null
         ], 200);
