@@ -71,6 +71,7 @@ class HomeController extends Controller
             'status' => 1,
         ])->sum('amount');
 
+        $data['all_terminals'] = Terminal::where('bank_id', Auth::user()->bank_id)->count();
 
 
         return view('home', $data);
