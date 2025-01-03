@@ -28,7 +28,7 @@ class TerminalopController extends Controller
     {
 
 
-        $geo = Terminal::where('serial_no', $request->serial_no)->update(
+        $geo = Terminal::where('serialNumber', $request->serial_no)->update(
             [
                 'geo_fence_id' => $request->zone_id
             ]
