@@ -35,6 +35,8 @@ class TerminalopController extends Controller
 
         );
 
+        dd($request->serial_no,$request->zone_id );
+
         return back()->with('message', "Zone has been updated for geofence");
 
 
