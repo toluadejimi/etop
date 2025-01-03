@@ -205,7 +205,7 @@
                                     <div class="form-floating mb-3">
                                         <input id="lng" class="form-control" required name="lng">
                                         <label for="tb-email">Longitude</label>
-                                        <input type="text" hidden value="{{$ter->serial_no}}" name="serial_no">
+                                        <input type="text" hidden value="{{$ter->serialNumber}}" name="serial_no">
 
                                     </div>
                                 </div>
