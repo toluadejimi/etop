@@ -190,7 +190,7 @@
                                     <tr>
 
                                         <td>{{$data->user->first_name ?? "name"}} {{$data->user->last_name ?? "name"}}</td>
-                                        <td><a href="/view-terminal?t_id={{($data->id)}}">{{($data->serial_no)}}</a> </td>
+                                        <td><a href="/view-terminal?t_id={{($data->id)}}">{{($data->serialNumber)}}</a> </td>
                                         <td>{{($data->terminalNo)}}</td>
                                         <td>
                                             @if($data->status == 1)
