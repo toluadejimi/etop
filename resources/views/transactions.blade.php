@@ -17,15 +17,13 @@
                                 </div>
                                 <div class="d-flex align-items-center">
                                     <div class="border-end pe-4 border-muted border-opacity-10">
-                                        <h3 class="mb-1 fw-semibold fs-8 d-flex align-content-center">{{ number_format($all_terminals) }}<i class="ti ti-arrow-up-right fs-5 lh-base text-success"></i></h3>
-                                        <p class="mb-0 text-dark">Registered Terminals</p>
+                                        <h3 class="mb-1 fw-semibold fs-8 d-flex align-content-center">₦{{ number_format(Auth::user()->main_wallet, 2) }}<i class="ti ti-arrow-up-right fs-5 lh-base text-success"></i></h3>
+                                        <p class="mb-0 text-dark">Main Wallet</p>
                                     </div>
-
                                     <div class="ps-4">
                                         <h3 class="mb-1 fw-semibold fs-8 d-flex align-content-center">{{ number_format($customers) }}<i class="ti ti-arrow-up-right fs-5 lh-base text-success"></i></h3>
-                                        <p class="mb-0 text-dark">Registered Customers</p>
+                                        <p class="mb-0 text-dark">Registred Customers</p>
                                     </div>
-
                                 </div>
                             </div>
                             <div class="col-sm-5">
@@ -81,7 +79,7 @@
                         </div>
                     </div>
 
-
+                   
 
                 </div>
 

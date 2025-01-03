@@ -24,8 +24,6 @@ class DashboardController extends Controller
             $data['all_banks'] = Bank::count();
             $data['all_transactions'] = PosLog::latest()->take(100)->get();
 
-
-
             return response()->json([
                 'status' => true,
                 'data' => $data
@@ -94,8 +92,6 @@ class DashboardController extends Controller
 
             ], 200);
         }
-
-
 
 
 
