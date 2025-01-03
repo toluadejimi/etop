@@ -63,7 +63,7 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-floating mb-3">
-                                        <input type="text" class="form-control" required value="{{$ter->serial_no}}" disabled name=" "
+                                        <input type="text" class="form-control" required value="{{$ter->serialNumber}}" disabled name=" "
                                                placeholder="" />
                                         <label for="tb-fname">Serial No</label>
                                     </div>
@@ -72,7 +72,7 @@
 
                                 <div class="col-md-4">
                                     <div class="form-floating mb-3">
-                                        <input type="text" class="form-control" value="{{$ter->terminalNo}}" disabled name="business_id"
+                                        <input type="text" class="form-control" value="{{$ter->tid}}" disabled name="business_id"
                                                placeholder=""/>
                                         <label for="tb-email">Terminal No</label>
                                     </div>
@@ -142,7 +142,7 @@
                                         </select>
                                         <label for="tb-email">Set Zone</label>
 
-                                        <input name="serial_no" value="{{$ter->serial_no}}" hidden=>
+                                        <input name="serial_no" value="{{$ter->serialNumber}}" hidden=>
 
                                     </div>
                                 </div>
