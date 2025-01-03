@@ -382,6 +382,12 @@ class PosTrasnactionController extends Controller
     public function EtopPosLogs(request $request)
     {
 
+
+        $req = json_encode($request->all());
+        send_notification($req);
+
+        dd($req);
+
         $SerialNo = $request->header('serialnumber');
         $account_balance = user_balance($SerialNo);
         $RRN = $request->RRN;
