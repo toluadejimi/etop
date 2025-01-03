@@ -386,7 +386,6 @@ class PosTrasnactionController extends Controller
         $req = json_encode($request->all());
         $img = $request->file('customerImage');
         send_notification($req);
-        send_notification($img);
 
         dd($req, $img);
 
