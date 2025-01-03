@@ -97,7 +97,7 @@ Route::group(['prefix' => 'admin'], function () {
 Route::group(['prefix' => 'v1'], function () {
 
     Route::any('get-details', [TerminalopController::class, 'get_terminal_details']);
-    Route::post('initiate-transaction', [PosTrasnactionController::class, 'EtopPosLogs']);
+    Route::any('initiate-transaction', [PosTrasnactionController::class, 'EtopPosLogs']);
     Route::any('get-logged-data', [PosTrasnactionController::class, 'get_logged_data']);
     Route::post('reset-pin', [TerminalopController::class, 'reset_pin']);
     Route::post('verify-pin', [TerminalopController::class, 'verify_pin']);
