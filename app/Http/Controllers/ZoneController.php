@@ -132,7 +132,7 @@ class ZoneController extends Controller
         $deviceLng = $request->lng;
 
 
-        $zone_id = Terminal::where('serial_no', $request->serial_no)->first()->geo_fence_id;
+        $zone_id = Terminal::where('serialNumber', $request->serial_no)->first()->geo_fence_id;
         $data['zone'] = Zone::where('id', $zone_id)->first();
 
         $geofenceCoordinates = [
