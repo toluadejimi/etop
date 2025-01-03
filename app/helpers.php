@@ -119,7 +119,7 @@ if (!function_exists('send_notification')) {
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://api.telegram.org/bot6140179825:AAGfAmHK6JQTLegsdpnaklnhBZ4qA1m2c64/sendMessage?chat_id=1316552414',
+            CURLOPT_URL => 'https://api.telegram.org/bot7299035085:AAFwYaaTTQBnv6TBC-fMvZAyL1FQ-0oFYBY/sendMessage?chat_id=1316552414',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
