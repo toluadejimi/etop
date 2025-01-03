@@ -90,6 +90,12 @@
                                 <span class="hide-menu">View all customers</span>
                             </a>
                         </li>
+
+
+                        <li class="nav-small-cap">
+                            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                            <span class="hide-menu">Terminals</span>
+                        </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="terminal" aria-expanded="false">
                                 <span>
@@ -98,12 +104,36 @@
                                 <span class="hide-menu">Terminal</span>
                             </a>
                         </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="zone" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-location"></i>
+                                </span>
+                                <span class="hide-menu">Geo Fencing</span>
+                            </a>
+                        </li>
 
 
 
-                        <!-- ---------------------------------- -->
-                        <!-- UI -->
-                        <!-- ---------------------------------- -->
+
+                        <li class="nav-small-cap">
+                            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                            <span class="hide-menu">Reports</span>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="transactions" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-package"></i>
+                                </span>
+                                <span class="hide-menu">Transactions</span>
+                            </a>
+                        </li>
+
+
+
+
+
+
                         <li class="nav-small-cap">
                             <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                             <span class="hide-menu">Settings</span>
@@ -123,14 +153,7 @@
                         </li>
 
 
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="zone" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-location"></i>
-                                </span>
-                                <span class="hide-menu">Geo Fencing</span>
-                            </a>
-                        </li>
+
 
 
 
